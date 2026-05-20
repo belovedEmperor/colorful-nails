@@ -1,2 +1,6 @@
-/target
-/dist
+target
+dist
+
+.env
+
+Session.vim
