@@ -9,13 +9,11 @@ pub fn Home() -> impl IntoView {
             view! { <ErrorView errors=errors /> }
         }>
             <div class="flex flex-col">
-                <h1 class="text-6xl tracking-widest italic text-center py-28">
-                    "Welcome to Colorful Nails & Spa"
-                </h1>
+                <h1 class="page-header tracking-widest">"Welcome to Colorful Nails & Spa"</h1>
 
                 <section class="bg-green-200 p-24">
                     <div class="page-container flex flex-col justify-center items-center gap-24">
-                        <h2 class="text-5xl font-bold tracking-wide">"Make An Appointment Now!"</h2>
+                        <h2 class="section-header text-5xl">"Make An Appointment Now!"</h2>
                         <NavButton
                             class="text-2xl bg-pink-300 text-white font-semibold px-10 py-4 rounded"
                             href="/booking"
@@ -26,7 +24,7 @@ pub fn Home() -> impl IntoView {
 
                 <section class="bg-orange-200 p-24">
                     <div class="page-container flex flex-col justify-center items-center gap-16">
-                        <h2 class="text-4xl font-bold tracking-wide">"Where Are We?"</h2>
+                        <h2 class="section-header">"Where Are We?"</h2>
                         <p class="text-xl">
                             "We're located at "
                             <a

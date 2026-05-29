@@ -119,11 +119,11 @@
 
 @layer components {
   .page-container {
-    @apply container mx-auto;
+    @apply container w-3/5 mx-auto;
   }
 
   .section-header {
-    @apply text-4xl font-bold;
+    @apply text-4xl font-bold underline underline-offset-4 decoration-8 decoration-pink-200;
   }
 
   .page-header {
