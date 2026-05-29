@@ -1,4 +1,4 @@
-use crate::components::{errors::ErrorView, header::Header, nav_btn::NavButton};
+use crate::components::{errors::ErrorView, nav_btn::NavButton};
 use leptos::prelude::*;
 
 /// Default Home Page
@@ -8,10 +8,8 @@ pub fn Home() -> impl IntoView {
         <ErrorBoundary fallback=|errors| {
             view! { <ErrorView errors=errors /> }
         }>
-            <Header />
-
             <div class="flex flex-col">
-                <h1 class="text-6xl tracking-widest italic text-center py-16">
+                <h1 class="text-6xl tracking-widest italic text-center py-28">
                     "Welcome to Colorful Nails & Spa"
                 </h1>
 
@@ -32,16 +30,18 @@ pub fn Home() -> impl IntoView {
                         <p class="text-xl">
                             "We're located at "
                             <a
+                                rel="external"
                                 href="https://maps.app.goo.gl/ZxRttxppY3V1qUxm8"
                                 class="text-blue-600 underline hover:text-blue-800 visited:text-purple-800 hover:visited:text-purple-900"
                             >
                                 "546 W Broad St, Hazleton, PA 18201"
                             </a> " in the "
                             <a
+                                rel="external"
                                 href="https://maps.app.goo.gl/YH4pRVnfSKjFmCuP9"
                                 class="text-blue-600 underline hover:text-blue-800 visited:text-purple-800 hover:visited:text-purple-900"
                             >
-                                "Hazleton Shopping Center!"
+                                "Hazleton Shopping Center"
                             </a>
                         </p>
                         <iframe

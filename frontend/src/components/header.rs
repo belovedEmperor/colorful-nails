@@ -16,7 +16,7 @@ pub fn Header() -> impl IntoView {
                         src="../../public/favicon.ico"
                         alt="Temporary Image"
                     />
-                    <nav class="grid grid-cols-2 gap-8 text-xl font-bold text-gray-800">
+                    <nav class="space-x-12 text-xl font-bold text-gray-800">
                         <NavButton href="/" text_content="Home" />
                         <NavButton href="/services" text_content="Services" />
                     </nav>
