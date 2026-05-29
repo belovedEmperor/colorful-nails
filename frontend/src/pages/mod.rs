@@ -1,3 +1,4 @@
+pub mod booking;
 pub mod home;
 pub mod services;
 
