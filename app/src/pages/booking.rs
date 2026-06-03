@@ -3,7 +3,7 @@ use leptos::prelude::*;
 
 #[component]
 pub fn Booking() -> impl IntoView {
-    let (phone_number, set_phone_number) = signal("".to_string());
+    let (phone_number, set_phone_number) = signal(String::new());
 
     view! {
         <ErrorBoundary fallback=|errors| {
@@ -33,7 +33,7 @@ pub fn Booking() -> impl IntoView {
                         pattern="\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}"
                         required
                         on:input:target=move |event| {
-                            set_phone_number.set(format_phone_number(event.target().value()))
+                            set_phone_number.set(format_phone_number(&event.target().value()));
                         }
                         prop:value=phone_number
                     />
@@ -67,11 +67,11 @@ pub fn Booking() -> impl IntoView {
     }
 }
 
-fn format_phone_number(input: String) -> String {
+fn format_phone_number(input: &str) -> String {
     let digits: String = input.chars().filter(|char| char.is_ascii_digit()).collect();
 
     match digits.len() {
-        0 => "".to_string(),
+        0 => String::new(),
         1..=3 => format!("({digits})"),
         4..=6 => {
             let (area_code, rest) = digits.split_at(3);

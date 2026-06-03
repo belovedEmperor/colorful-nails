@@ -1,43 +1,9 @@
-use leptos::prelude::*;
-use leptos_meta::*;
-use leptos_router::{components::*, path};
+#[wasm_bindgen::prelude::wasm_bindgen]
+pub fn hydrate() {
+    use app::App;
+    // initializes logging using the `log` crate
+    _ = console_log::init_with_level(log::Level::Debug);
+    console_error_panic_hook::set_once();
 
-// Modules
-mod components;
-mod pages;
-
-// Top-Level pages
-use crate::pages::booking::Booking;
-use crate::pages::home::Home;
-use crate::pages::services::Services;
-
-// Components
-use crate::components::header::Header;
-
-/// An app router which renders the homepage and handles 404's
-#[component]
-pub fn App() -> impl IntoView {
-    // Provides context that manages stylesheets, titles, meta tags, etc.
-    provide_meta_context();
-
-    view! {
-        <Html attr:lang="en" attr:dir="ltr" attr:data-theme="light" />
-
-        // sets the document title
-        <Title text="Colorful Nails & Spa" />
-
-        // injects metadata in the <head> of the page
-        <Meta charset="UTF-8" />
-        <Meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-        <Router>
-            <Header />
-
-            <Routes fallback=|| view! { NotFound }>
-                <Route path=path!("/") view=Home />
-                <Route path=path!("/services") view=Services />
-                <Route path=path!("/booking") view=Booking />
-            </Routes>
-        </Router>
-    }
+    leptos::mount::hydrate_body(App);
 }
