@@ -1,8 +1,77 @@
 use crate::components::errors::ErrorView;
 use leptos::prelude::*;
 
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[cfg_attr(feature = "ssr", derive(sqlx::FromRow))]
+pub struct Appointment {
+    pub id: uuid::Uuid,
+    pub user_id: uuid::Uuid,
+    pub scheduled_at: chrono::DateTime<chrono::Utc>,
+    pub services: Option<Vec<String>>,
+    pub notes: Option<String>,
+    pub accepted: bool,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+#[server]
+pub async fn create_appointment(
+    scheduled_at: String,
+    services: Option<Vec<String>>,
+    notes: Option<String>,
+    first_name: String,
+    last_name: String,
+    phone: String,
+    email: String,
+) -> Result<Appointment, ServerFnError> {
+    use chrono::NaiveDateTime;
+    use sqlx::{PgPool, query, query_as};
+
+    let scheduled_at = NaiveDateTime::parse_from_str(&scheduled_at, "%Y-%m-%dT%H:%M")
+        .map_err(|error| ServerFnError::new(format!("Invalid date: {error}")))?
+        .and_utc();
+
+    let db =
+        use_context::<PgPool>().ok_or_else(|| ServerFnError::new("DB should be in context"))?;
+
+    let user_uid = query!(
+        "
+            INSERT INTO users (first_name,last_name,phone,email)
+            VALUES ($1,$2,$3,$4)
+            RETURNING id
+        ",
+        first_name,
+        last_name,
+        phone,
+        email
+    )
+    .fetch_one(&db)
+    .await
+    .map_err(ServerFnError::new)?;
+
+    let user_id: uuid::Uuid = user_uid.id;
+
+    let appointment = query_as!(
+        Appointment,
+        "
+        INSERT INTO appointments (user_id,scheduled_at,services,notes)
+        VALUES ($1,$2,$3,$4)
+        RETURNING *
+    ",
+        user_id,
+        scheduled_at,
+        services.as_deref(),
+        notes
+    )
+    .fetch_one(&db)
+    .await
+    .map_err(ServerFnError::new)?;
+
+    Ok(appointment)
+}
+
 #[component]
 pub fn Booking() -> impl IntoView {
+    let action = ServerAction::<CreateAppointment>::new();
     let (phone_number, set_phone_number) = signal(String::new());
 
     view! {
@@ -12,7 +81,7 @@ pub fn Booking() -> impl IntoView {
             <div class="flex flex-col">
                 <h1 class="page-header">"Booking"</h1>
 
-                <form action="post">
+                <ActionForm action=action>
                     <label for="first_name">"First Name:*"</label>
                     <input
                         type="text"
@@ -24,13 +93,13 @@ pub fn Booking() -> impl IntoView {
                     <label for="last_name">"Last Name:"</label>
                     <input type="text" placeholder="Doe" id="last_name" name="last_name" />
 
-                    <label for="phone_number">"Phone Number:*"</label>
+                    <label for="phone">"Phone Number:*"</label>
                     <input
                         type="tel"
-                        placeholder="(570)999-9999"
-                        id="last_name"
-                        name="last_name"
-                        pattern="\\([0-9]{3}\\)[0-9]{3}-[0-9]{4}"
+                        placeholder="(570)-999-9999"
+                        id="phone"
+                        name="phone"
+                        pattern="\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}"
                         required
                         on:input:target=move |event| {
                             set_phone_number.set(format_phone_number(&event.target().value()));
@@ -50,17 +119,31 @@ pub fn Booking() -> impl IntoView {
                     <label for="services">"Services:"</label>
                     <select></select>
 
-                    <label for="preferred_date">"Preferred Date:*"</label>
-                    <input type="radio" id="preferred_date" name="preferred_date" required />
-
-                    <label for="preferred_time">"Preferred Time:*"</label>
-                    <input type="radio" id="preferred_time" name="preferred_time" required />
+                    <label for="scheduled_at">"Preferred Date:*"</label>
+                    <input type="datetime-local" id="scheduled_at" name="scheduled_at" required />
 
                     <label for="notes">"Notes:"</label>
-                    <textarea type="text" id="notes" name="notes" rows="5" columns="33" />
+                    <textarea id="notes" name="notes" rows="5" />
 
-                    <input type="submit" value="Submit" />
-                </form>
+                    {move || {
+                        if action.pending().get() {
+                            view! { <p>"Submitting..."</p> }.into_any()
+                        } else {
+                            match action.value().get() {
+                                None => view! { <p></p> }.into_any(),
+                                Some(Ok(appointment)) => {
+                                    view! { <p>"Booked! ID: " {appointment.id.to_string()}</p> }
+                                        .into_any()
+                                }
+                                Some(Err(error)) => {
+                                    view! { <p>"Error: " {error.to_string()}</p> }.into_any()
+                                }
+                            }
+                        }
+                    }}
+
+                    <input type="submit" value="Submit" disabled=move || action.pending().get() />
+                </ActionForm>
                 <p>{phone_number}</p>
             </div>
         </ErrorBoundary>

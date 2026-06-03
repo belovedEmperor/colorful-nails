@@ -15,6 +15,13 @@ console_log = "1.0.0"
 http = "1.3.1"
 log = "0.4.27"
 simple_logger = "5.0.0"
+sqlx = { version = "0.9.0", features = [
+  "chrono",
+  "macros",
+  "postgres",
+  "runtime-tokio",
+  "uuid"
+] }
 thiserror = "2.0.12"
 tokio = { version = "1.45.0", features = ["full"] }
 tower = { version = "0.5.2", features = ["full"] }

@@ -70,12 +70,17 @@ name = "app"
 version = "0.1.0"
 dependencies = [
  "cfg-if",
+ "chrono",
  "http",
  "leptos",
  "leptos_axum",
  "leptos_meta",
  "leptos_router",
+ "serde",
+ "serde_json",
+ "sqlx",
  "thiserror 2.0.18",
+ "uuid",
 ]
 
 [[package]]
@@ -2321,19 +2326,15 @@ version = "0.1.0"
 dependencies = [
  "app",
  "axum",
- "chrono",
  "dotenvy",
  "leptos",
  "leptos_axum",
  "log",
- "serde",
- "serde_json",
  "simple_logger",
  "sqlx",
  "tokio",
  "tower",
  "tower-http",
- "uuid",
 ]
 
 [[package]]

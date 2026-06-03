@@ -14,6 +14,7 @@ CREATE TABLE appointments (
     user_id UUID NOT NULL REFERENCES users(id),
     scheduled_at TIMESTAMPTZ NOT NULL,
     services TEXT[],
+    notes TEXT,
     accepted BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
