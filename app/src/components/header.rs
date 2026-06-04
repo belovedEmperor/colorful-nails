@@ -20,8 +20,12 @@ pub fn Header() -> impl IntoView {
                         <NavButton href="/" text_content="Home" />
                         <NavButton href="/services" text_content="Services" />
                     </nav>
-                    <nav class="ml-auto text-xl font-bold text-gray-800 bg-green-200 rounded-lg px-5 py-2">
-                        <NavButton href="/booking" text_content="Booking" />
+                    <nav class="ml-auto">
+                        <NavButton
+                            class="text-xl font-bold text-gray-800 bg-green-200 rounded-lg px-5 py-2"
+                            href="/booking"
+                            text_content="Booking"
+                        />
                     </nav>
                 </div>
             </div>

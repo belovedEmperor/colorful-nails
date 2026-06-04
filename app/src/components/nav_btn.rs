@@ -7,8 +7,8 @@ pub fn NavButton<'a>(
     #[prop(optional, default = "")] class: &'a str,
 ) -> impl IntoView {
     view! {
-        <button class=format!("{class}")>
-            <a href=href>{text_content}</a>
-        </button>
+        <a href=href>
+            <button class=format!("{class}")>{text_content}</button>
+        </a>
     }
 }
