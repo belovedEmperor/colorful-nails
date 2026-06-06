@@ -8,44 +8,47 @@ pub fn Home() -> impl IntoView {
         <ErrorBoundary fallback=|errors| {
             view! { <ErrorView errors=errors /> }
         }>
-            <div class="flex flex-col">
-                <h1 class="page-header tracking-widest">"Welcome to Colorful Nails & Spa"</h1>
-
-                <section class="bg-green-200 p-24">
-                    <div class="page-container flex flex-col justify-center items-center gap-24">
-                        <h2 class="section-header text-5xl">"Make An Appointment Now!"</h2>
+            <div class="flex flex-col bg-background">
+                <section class="relative section-padding py-48 bg-[url('/logo.jpg')] bg-cover bg-center">
+                    <div class="absolute inset-0 bg-white/80 pointer-events-none"></div>
+                    <div class="relative z-10 page-container section-container flex flex-col items-center">
+                        <div class="flex flex-col gap-2">
+                            <h1 class="page-header">"Colorful Nails"</h1>
+                            <h2 class="text-center text-subtitle">"Your Favorite Nail Salon"</h2>
+                        </div>
                         <NavButton
-                            class="text-2xl bg-pink-300 text-white font-semibold px-10 py-4 rounded"
+                            button_class="bg-primary button"
                             href="/booking"
-                            text_content="Book Now!"
+                            text_content="make an appointment"
                         />
                     </div>
                 </section>
 
-                <section class="bg-orange-200 p-24">
-                    <div class="page-container flex flex-col justify-center items-center gap-16">
-                        <h2 class="section-header">"Where Are We?"</h2>
-                        <p class="text-xl">
+                <section>
+                    <div class="section-padding section-container page-container flex flex-col justify-center section-container">
+                        <h2 class="section-header">"Who Are We?"</h2>
+                        <p>"We're a nail salon that's been open for more than 13 years!"</p>
+
+                        <p>
                             "We're located at "
                             <a
                                 rel="external"
                                 href="https://maps.app.goo.gl/ZxRttxppY3V1qUxm8"
-                                class="text-blue-600 underline hover:text-blue-800 visited:text-purple-800 hover:visited:text-purple-900"
+                                class="link"
                             >
                                 "546 W Broad St, Hazleton, PA 18201"
                             </a> " in the "
                             <a
                                 rel="external"
                                 href="https://maps.app.goo.gl/YH4pRVnfSKjFmCuP9"
-                                class="text-blue-600 underline hover:text-blue-800 visited:text-purple-800 hover:visited:text-purple-900"
+                                class="link"
                             >
                                 "Hazleton Shopping Center"
-                            </a>
+                            </a> "."
                         </p>
                         <iframe
+                            class="w-full max-w-2xl h-96"
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3013.1537856252676!2d-75.98709772245651!3d40.95620977135797!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c5a473e6c6ba81%3A0x605e3e0385f455f2!2sColorful%20Nails%20%26%20Spa!5e0!3m2!1sen!2sus!4v1780006481155!5m2!1sen!2sus"
-                            width="600"
-                            height="450"
                             style="border:0;"
                             allowfullscreen=""
                             loading="lazy"
@@ -53,7 +56,6 @@ pub fn Home() -> impl IntoView {
                         ></iframe>
                     </div>
                 </section>
-
             </div>
         </ErrorBoundary>
     }

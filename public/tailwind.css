@@ -113,20 +113,35 @@
 
 @layer base {
   body {
-    @apply font-sans;
+    @apply font-sans text-body;
   }
 }
 
 @layer components {
   .page-container {
-    @apply container w-3/5 mx-auto;
-  }
-
-  .section-header {
-    @apply text-4xl font-bold underline underline-offset-4 decoration-8 decoration-pink-200;
+    @apply container w-11/12 lg:w-3/5 mx-auto;
   }
 
   .page-header {
-    @apply text-6xl italic text-center py-28;
+    @apply text-title font-bold text-center text-ink;
+  }
+
+  .section-header {
+    @apply text-section font-bold;
+  }
+
+  .link {
+    @apply text-link underline hover:text-link-hover visited:text-link-visited hover:visited:text-link-visited-hover;
+  }
+
+  .section-padding {
+    @apply py-8 lg:py-16;
+  }
+  .section-container {
+    @apply gap-6;
+  }
+
+  .button {
+    @apply rounded-lg p-2;
   }
 }
