@@ -2,105 +2,118 @@
 @tailwind components;
 @tailwind utilities;
 
-/* libre-baskerville-regular - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
+  font-family: "Inter";
+  font-weight: 100;
   font-style: normal;
+  src: url("/fonts/Inter_18pt-Thin.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 100;
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-ThinItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 200;
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-ExtraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 200;
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-ExtraLightItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 300;
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 300;
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-LightItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
   font-weight: 400;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-regular.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-regular.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-Regular.ttf") format("truetype");
 }
-
-/* libre-baskerville-italic - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
-  font-style: italic;
+  font-family: "Inter";
   font-weight: 400;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-italic.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-italic.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-Italic.ttf") format("truetype");
 }
-
-/* libre-baskerville-500 - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
-  font-style: normal;
+  font-family: "Inter";
   font-weight: 500;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-500.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-500.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-Medium.ttf") format("truetype");
 }
-
-/* libre-baskerville-500italic - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
-  font-style: italic;
+  font-family: "Inter";
   font-weight: 500;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-500italic.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-500italic.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
-}
-
-/* libre-baskerville-600 - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
-  font-style: normal;
-  font-weight: 600;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-600.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-600.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
-}
-
-/* libre-baskerville-600italic - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
   font-style: italic;
+  src: url("/fonts/Inter_18pt-MediumItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
   font-weight: 600;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-600italic.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-600italic.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
-}
-
-/* libre-baskerville-700 - latin */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
   font-style: normal;
-  font-weight: 700;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-700.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-700.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+  src: url("/fonts/Inter_18pt-SemiBold.ttf") format("truetype");
 }
-
-/* libre-baskerville-700italic - latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: "Libre Baskerville";
+  font-family: "Inter";
+  font-weight: 600;
   font-style: italic;
+  src: url("/fonts/Inter_18pt-SemiBoldItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
   font-weight: 700;
-  src:
-    url("/fonts/libre-baskerville-v24-latin-700italic.woff2") format("woff2"),
-    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-      url("/fonts/libre-baskerville-v24-latin-700italic.ttf") format("truetype"); /* Chrome 4+, Firefox 3.5+, IE 9+, Safari 3.1+, iOS 4.2+, Android Browser 2.2+ */
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-BoldItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 800;
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-ExtraBold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 800;
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-ExtraBoldItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 900;
+  font-style: normal;
+  src: url("/fonts/Inter_18pt-Black.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Inter";
+  font-weight: 900;
+  font-style: italic;
+  src: url("/fonts/Inter_18pt-BlackItalic.ttf") format("truetype");
 }
 
 @layer base {
   body {
-    font-family: "Libre Baskerville", serif;
+    @apply font-sans;
   }
 }
 
