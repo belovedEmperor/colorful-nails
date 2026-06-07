@@ -144,4 +144,11 @@
   .button {
     @apply rounded-lg py-1 px-4;
   }
+
+  .input-container {
+    @apply flex flex-col gap-1;
+  }
+  .input {
+    @apply p-1 border h-8;
+  }
 }

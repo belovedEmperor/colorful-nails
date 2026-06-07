@@ -107,9 +107,10 @@ pub fn Booking() -> impl IntoView {
 
                 <ActionForm action=action>
                     <div class="grid grid-cols-2 gap-8 justify-between">
-                        <div class="flex flex-col">
+                        <div class="input-container">
                             <label for="first_name">"First Name:*"</label>
                             <input
+                                class="input"
                                 type="text"
                                 placeholder="Jane"
                                 id="first_name"
@@ -117,14 +118,21 @@ pub fn Booking() -> impl IntoView {
                                 required
                             />
                         </div>
-                        <div class="flex flex-col">
+                        <div class="input-container">
                             <label for="last_name">"Last Name:"</label>
-                            <input type="text" placeholder="Doe" id="last_name" name="last_name" />
+                            <input
+                                class="input"
+                                type="text"
+                                placeholder="Doe"
+                                id="last_name"
+                                name="last_name"
+                            />
                         </div>
 
-                        <div class="flex flex-col">
+                        <div class="input-container">
                             <label for="phone">"Phone Number:*"</label>
                             <input
+                                class="input"
                                 type="tel"
                                 placeholder="(570)-999-9999"
                                 id="phone"
@@ -139,9 +147,10 @@ pub fn Booking() -> impl IntoView {
                             />
                         </div>
 
-                        <div class="flex flex-col">
+                        <div class="input-container">
                             <label for="email">"Email:*"</label>
                             <input
+                                class="input"
                                 type="email"
                                 placeholder="example@example.com"
                                 id="email"
@@ -150,14 +159,15 @@ pub fn Booking() -> impl IntoView {
                             />
                         </div>
 
-                        <div class="flex flex-col">
+                        <div class="input-container">
                             <label for="services">"Services:"</label>
-                            <select></select>
+                            <select class="input"></select>
                         </div>
 
-                        <div class="flex flex-col">
+                        <div class="input-container">
                             <label for="scheduled_at">"Preferred Date:*"</label>
                             <input
+                                class="input"
                                 type="datetime-local"
                                 id="scheduled_at"
                                 name="scheduled_at"
@@ -165,9 +175,9 @@ pub fn Booking() -> impl IntoView {
                             />
                         </div>
 
-                        <div class="flex flex-col col-span-2">
+                        <div class="input-container col-span-2">
                             <label for="notes">"Notes:"</label>
-                            <textarea id="notes" name="notes" rows="5" />
+                            <textarea class="input h-16" id="notes" name="notes" rows="5" />
                         </div>
 
                         {move || {
