@@ -74,7 +74,7 @@ fn format_phone_number(input: &str) -> String {
 
     match digits.len() {
         0 => String::new(),
-        1..=3 => format!("({digits})"),
+        1..=3 => format!("({digits}"),
         4..=6 => {
             let (area_code, rest) = digits.split_at(3);
             format!("({area_code})-{rest}")
