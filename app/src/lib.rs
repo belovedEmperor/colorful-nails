@@ -17,7 +17,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <HydrationScripts options />
                 <MetaTags />
             </head>
-            <body>
+            <body class="bg-background">
                 <App />
             </body>
         </html>

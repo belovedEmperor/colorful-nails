@@ -8,7 +8,7 @@ pub fn Home() -> impl IntoView {
         <ErrorBoundary fallback=|errors| {
             view! { <ErrorView errors=errors /> }
         }>
-            <div class="flex flex-col bg-background">
+            <div class="flex flex-col">
                 <section class="relative section-padding py-48 bg-[url('/logo.jpg')] bg-cover bg-center">
                     <div class="absolute inset-0 bg-white/80 pointer-events-none"></div>
                     <div class="relative z-10 page-container section-container flex flex-col items-center">
