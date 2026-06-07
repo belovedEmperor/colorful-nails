@@ -27,7 +27,12 @@ pub fn Home() -> impl IntoView {
                 <section>
                     <div class="section-padding section-container page-container flex flex-col justify-center section-container">
                         <h2 class="section-header">"Who Are We?"</h2>
-                        <p>"We're a nail salon that's been open for more than 13 years!"</p>
+                        <p>
+                            "We're a nail salon that's been open for more than 13 years! If you have any questions, you can reach us at "
+                            <a class="link" href="+15704552799">
+                                (570) 455-2799
+                            </a>"."
+                        </p>
 
                         <p>
                             "We're located at "
