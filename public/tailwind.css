@@ -119,7 +119,7 @@
 
 @layer components {
   .page-container {
-    @apply container w-11/12 md:w-1/2 mx-auto;
+    @apply container w-11/12 md:w-2/5 mx-auto;
   }
 
   .page-header {
@@ -142,6 +142,6 @@
   }
 
   .button {
-    @apply rounded-lg p-2;
+    @apply rounded-lg py-1 px-4;
   }
 }
