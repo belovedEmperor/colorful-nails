@@ -32,6 +32,7 @@ mod pages;
 use crate::pages::booking::Booking;
 use crate::pages::home::Home;
 use crate::pages::services::Services;
+use crate::pages::success::Success;
 
 // Components
 use crate::components::header::Header;
@@ -53,6 +54,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/") view=Home />
                 <Route path=path!("/services") view=Services />
                 <Route path=path!("/booking") view=Booking />
+                <Route path=path!("/success") view=Success />
             </Routes>
         </Router>
     }
