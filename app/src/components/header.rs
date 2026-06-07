@@ -13,13 +13,15 @@ pub fn Header() -> impl IntoView {
         }>
             <div class="bg-primary min-h-20 relative z-50">
                 <div class="page-container h-20 items-center justify-between flex">
-                    <img
-                        class="font-bold text-ink"
-                        src="logo.jpg"
-                        alt="Temporary Image"
-                        width=50
-                        height=50
-                    />
+                    <a href="/">
+                        <img
+                            class="font-bold text-ink"
+                            src="logo.jpg"
+                            alt="Temporary Image"
+                            width=50
+                            height=50
+                        />
+                    </a>
                     <button
                         class="md:hidden text-section"
                         on:click=move |_| menu_open.update(|open| *open = !*open)
