@@ -77,18 +77,18 @@ fn format_phone_number(input: &str) -> String {
         1..=3 => format!("({digits}"),
         4..=6 => {
             let (area_code, rest) = digits.split_at(3);
-            format!("({area_code})-{rest}")
+            format!("({area_code}) {rest}")
         }
         7..=10 => {
             let (area_code, rest) = digits.split_at(3);
             let (middle, rest) = rest.split_at(3);
-            format!("({area_code})-{middle}-{rest}")
+            format!("({area_code}) {middle}-{rest}")
         }
         _ => {
             let (area_code, rest) = digits.split_at(3);
             let (middle, rest) = rest.split_at(3);
             let (rest, _) = rest.split_at(4);
-            format!("({area_code})-{middle}-{rest}")
+            format!("({area_code}) {middle}-{rest}")
         }
     }
 }
@@ -134,7 +134,7 @@ pub fn Booking() -> impl IntoView {
                             <input
                                 class="input"
                                 type="tel"
-                                placeholder="(570)-999-9999"
+                                placeholder="(570) 455-2799"
                                 id="phone"
                                 name="phone"
                                 pattern="\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}"
