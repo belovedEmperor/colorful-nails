@@ -69,87 +69,6 @@ pub async fn create_appointment(
     Ok(appointment)
 }
 
-#[component]
-pub fn Booking() -> impl IntoView {
-    let action = ServerAction::<CreateAppointment>::new();
-    let (phone_number, set_phone_number) = signal(String::new());
-
-    view! {
-        <ErrorBoundary fallback=|errors| {
-            view! { <ErrorView errors=errors /> }
-        }>
-            <div class="flex flex-col">
-                <h1 class="page-header">"Booking"</h1>
-
-                <ActionForm action=action>
-                    <label for="first_name">"First Name:*"</label>
-                    <input
-                        type="text"
-                        placeholder="Jane"
-                        id="first_name"
-                        name="first_name"
-                        required
-                    />
-                    <label for="last_name">"Last Name:"</label>
-                    <input type="text" placeholder="Doe" id="last_name" name="last_name" />
-
-                    <label for="phone">"Phone Number:*"</label>
-                    <input
-                        type="tel"
-                        placeholder="(570)-999-9999"
-                        id="phone"
-                        name="phone"
-                        pattern="\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}"
-                        required
-                        on:input:target=move |event| {
-                            set_phone_number.set(format_phone_number(&event.target().value()));
-                        }
-                        prop:value=phone_number
-                    />
-
-                    <label for="email">"Email:*"</label>
-                    <input
-                        type="email"
-                        placeholder="example@example.com"
-                        id="email"
-                        name="email"
-                        required
-                    />
-
-                    <label for="services">"Services:"</label>
-                    <select></select>
-
-                    <label for="scheduled_at">"Preferred Date:*"</label>
-                    <input type="datetime-local" id="scheduled_at" name="scheduled_at" required />
-
-                    <label for="notes">"Notes:"</label>
-                    <textarea id="notes" name="notes" rows="5" />
-
-                    {move || {
-                        if action.pending().get() {
-                            view! { <p>"Submitting..."</p> }.into_any()
-                        } else {
-                            match action.value().get() {
-                                None => view! { <p></p> }.into_any(),
-                                Some(Ok(appointment)) => {
-                                    view! { <p>"Booked! ID: " {appointment.id.to_string()}</p> }
-                                        .into_any()
-                                }
-                                Some(Err(error)) => {
-                                    view! { <p>"Error: " {error.to_string()}</p> }.into_any()
-                                }
-                            }
-                        }
-                    }}
-
-                    <input type="submit" value="Submit" disabled=move || action.pending().get() />
-                </ActionForm>
-                <p>{phone_number}</p>
-            </div>
-        </ErrorBoundary>
-    }
-}
-
 fn format_phone_number(input: &str) -> String {
     let digits: String = input.chars().filter(|char| char.is_ascii_digit()).collect();
 
@@ -171,5 +90,112 @@ fn format_phone_number(input: &str) -> String {
             let (rest, _) = rest.split_at(4);
             format!("({area_code})-{middle}-{rest}")
         }
+    }
+}
+
+#[component]
+pub fn Booking() -> impl IntoView {
+    let action = ServerAction::<CreateAppointment>::new();
+    let (phone_number, set_phone_number) = signal(String::new());
+
+    view! {
+        <ErrorBoundary fallback=|errors| {
+            view! { <ErrorView errors=errors /> }
+        }>
+            <div class="flex flex-col page-container section-padding section-container">
+                <h1 class="page-header">"Booking"</h1>
+
+                <ActionForm action=action>
+                    <div class="grid grid-cols-2 gap-8 justify-between">
+                        <div class="flex flex-col">
+                            <label for="first_name">"First Name:*"</label>
+                            <input
+                                type="text"
+                                placeholder="Jane"
+                                id="first_name"
+                                name="first_name"
+                                required
+                            />
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="last_name">"Last Name:"</label>
+                            <input type="text" placeholder="Doe" id="last_name" name="last_name" />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="phone">"Phone Number:*"</label>
+                            <input
+                                type="tel"
+                                placeholder="(570)-999-9999"
+                                id="phone"
+                                name="phone"
+                                pattern="\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}"
+                                required
+                                on:input:target=move |event| {
+                                    set_phone_number
+                                        .set(format_phone_number(&event.target().value()));
+                                }
+                                prop:value=phone_number
+                            />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="email">"Email:*"</label>
+                            <input
+                                type="email"
+                                placeholder="example@example.com"
+                                id="email"
+                                name="email"
+                                required
+                            />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="services">"Services:"</label>
+                            <select></select>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label for="scheduled_at">"Preferred Date:*"</label>
+                            <input
+                                type="datetime-local"
+                                id="scheduled_at"
+                                name="scheduled_at"
+                                required
+                            />
+                        </div>
+
+                        <div class="flex flex-col col-span-2">
+                            <label for="notes">"Notes:"</label>
+                            <textarea id="notes" name="notes" rows="5" />
+                        </div>
+
+                        {move || {
+                            if action.pending().get() {
+                                view! { <p>"Submitting..."</p> }.into_any()
+                            } else {
+                                match action.value().get() {
+                                    None => view! { <p></p> }.into_any(),
+                                    Some(Ok(appointment)) => {
+                                        view! { <p>"Booked! ID: " {appointment.id.to_string()}</p> }
+                                            .into_any()
+                                    }
+                                    Some(Err(error)) => {
+                                        view! { <p>"Error: " {error.to_string()}</p> }.into_any()
+                                    }
+                                }
+                            }
+                        }}
+
+                        <input
+                            class="button bg-primary col-start-1 col-span-2 w-fit mx-auto"
+                            type="submit"
+                            value="Submit"
+                            disabled=move || action.pending().get()
+                        />
+                    </div>
+                </ActionForm>
+            </div>
+        </ErrorBoundary>
     }
 }
