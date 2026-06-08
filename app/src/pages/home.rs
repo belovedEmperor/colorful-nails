@@ -19,7 +19,7 @@ pub fn Home() -> impl IntoView {
                         <NavButton
                             button_class="bg-primary button"
                             href="/booking"
-                            text_content="make an appointment"
+                            text_content="Book Now"
                         />
                     </div>
                 </section>
