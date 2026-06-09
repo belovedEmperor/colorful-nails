@@ -24,42 +24,86 @@ pub fn Home() -> impl IntoView {
                     </div>
                 </section>
 
-                <section>
-                    <div class="section-padding section-container page-container flex flex-col">
-                        <h2 class="section-header">"Who Are We?"</h2>
-                        <p>
-                            "We're a nail salon that's been open for more than 13 years! If you have any questions, you can reach us at "
-                            <a class="link" href="tel:+15704552799">
-                                (570) 455-2799
-                            </a>"."
-                        </p>
+                <section class="section-padding section-container page-container flex flex-col">
+                    <h2 class="section-header">"Who Are We?"</h2>
+                    <p>
+                        "We're a family-owned nail salon that's been in Hazleton for more than 13 years!"
+                    </p>
+                </section>
 
-                        <p>
-                            "We're located at "
-                            <a
-                                rel="external"
-                                href="https://maps.app.goo.gl/ZxRttxppY3V1qUxm8"
-                                class="link"
-                            >
-                                "546 W Broad St, Hazleton, PA 18201"
-                            </a> " in the "
-                            <a
-                                rel="external"
-                                href="https://maps.app.goo.gl/YH4pRVnfSKjFmCuP9"
-                                class="link"
-                            >
-                                "Hazleton Shopping Center"
-                            </a> "."
-                        </p>
-                        <iframe
-                            class="w-full max-w-2xl h-96 mx-auto"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3013.1537856252676!2d-75.98709772245651!3d40.95620977135797!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c5a473e6c6ba81%3A0x605e3e0385f455f2!2sColorful%20Nails%20%26%20Spa!5e0!3m2!1sen!2sus!4v1780006481155!5m2!1sen!2sus"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                        ></iframe>
-                    </div>
+                <section class="section-padding section-container page-container flex flex-col">
+                    <h2 class="section-header">"When Are We Open?"</h2>
+                    <table class="w-fit">
+                        <tr>
+                            <td class="pr-4">"Monday"</td>
+                            <td>" 9:30 AM–7:30 PM"</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4">"Tuesday"</td>
+                            <td>" 9:30 AM–7:30 PM"</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4">"Wednesday"</td>
+                            <td>" 9:30 AM–7:30 PM"</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4">"Thursday"</td>
+                            <td>" 9:30 AM–7:30 PM"</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4">"Friday"</td>
+                            <td>" 9:30 AM–7:30 PM"</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4">"Saturday"</td>
+                            <td>" 9:30 AM–7:30 PM"</td>
+                        </tr>
+                        <tr>
+                            <td class="pr-4">"Sunday"</td>
+                            <td>" 11 AM–6 PM"</td>
+                        </tr>
+                    </table>
+                    <p>
+                        "We're often open on holidays that others stores wouldn't be open on. Please "
+                        <a class="link" href="tel:+15704552799">
+                            "call us"
+                        </a> " to check if we're open."
+                    </p>
+                </section>
+
+                <section class="section-padding section-container page-container flex flex-col">
+                    <h2 class="section-header">"Where Are We?"</h2>
+                    <p>
+                        "We're located at "
+                        <a
+                            rel="external"
+                            href="https://maps.app.goo.gl/ZxRttxppY3V1qUxm8"
+                            class="link"
+                        >
+                            "546 W Broad St, Hazleton, PA 18201"
+                        </a> " in the "
+                        <a
+                            rel="external"
+                            href="https://maps.app.goo.gl/YH4pRVnfSKjFmCuP9"
+                            class="link"
+                        >
+                            "Hazleton Shopping Center"
+                        </a> "."
+                    </p>
+                    <iframe
+                        class="w-full max-w-2xl h-96 mx-auto"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3013.1537856252676!2d-75.98709772245651!3d40.95620977135797!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c5a473e6c6ba81%3A0x605e3e0385f455f2!2sColorful%20Nails%20%26%20Spa!5e0!3m2!1sen!2sus!4v1780006481155!5m2!1sen!2sus"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                    <p>
+                        "If you have any questions, you can reach us at "
+                        <a class="link" href="tel:+15704552799">
+                            "(570) 455-2799"
+                        </a> "."
+                    </p>
                 </section>
             </div>
         </ErrorBoundary>
