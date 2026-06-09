@@ -1,7 +1,6 @@
 use leptos::prelude::*;
 
 use crate::components::errors::ErrorView;
-use crate::components::nav_btn::NavButton;
 
 /// Footer
 #[component]
