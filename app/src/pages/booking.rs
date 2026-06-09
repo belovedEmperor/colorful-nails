@@ -213,11 +213,18 @@ pub fn Booking() -> impl IntoView {
                                 match action.value().get() {
                                     None => view! { <p></p> }.into_any(),
                                     Some(Ok(appointment)) => {
-                                        view! { <p>"Booked! ID: " {appointment.id.to_string()}</p> }
+                                        view! {
+                                            <p>
+                                                "Booked! ID: " {appointment.id.to_string()} <br />
+                                                "We will email you about the status of the appointment soon."
+                                            </p>
+                                        }
                                             .into_any()
                                     }
                                     Some(Err(error)) => {
-                                        view! { <p>"Error: " {error.to_string()}</p> }.into_any()
+
+                                        view! { <p>"Error: " {error.to_string()}</p> }
+                                            .into_any()
                                     }
                                 }
                             }
