@@ -39,7 +39,7 @@ pub fn Header() -> impl IntoView {
                     </nav>
                 </div>
                 <Show when=move || menu_open.get()>
-                    <div class="bg-primary p-8 flex flex-col">
+                    <nav class="bg-primary p-8 flex flex-col">
                         <NavButton
                             anchor_class="p-2 w-full text-center"
                             href="/"
@@ -55,7 +55,7 @@ pub fn Header() -> impl IntoView {
                             href="/booking"
                             text_content="Booking"
                         />
-                    </div>
+                    </nav>
                 </Show>
             </div>
         </ErrorBoundary>

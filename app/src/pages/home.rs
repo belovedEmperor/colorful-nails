@@ -98,6 +98,9 @@ pub fn Home() -> impl IntoView {
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
                     ></iframe>
+                </section>
+                <section class="section-padding section-container page-container flex flex-col">
+                    <h2 class="section-header">"How do you reach us?"</h2>
                     <p>
                         "If you have any questions, you can reach us at "
                         <a class="link" href="tel:+15704552799">
