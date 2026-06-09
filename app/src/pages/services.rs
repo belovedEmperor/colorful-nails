@@ -13,13 +13,7 @@ const SERVICE_CATEGORIES: &[ServiceCategory] = &[
     },
     ServiceCategory {
         name: "Nail Extras",
-        services: &[
-            "Nail Repair",
-            "Nail Trim",
-            "Nail
- Design",
-            "Nail Removal",
-        ],
+        services: &["Nail Repair", "Nail Trim", "Nail Design", "Nail Removal"],
     },
     ServiceCategory {
         name: "Acrylic",
@@ -32,33 +26,23 @@ const SERVICE_CATEGORIES: &[ServiceCategory] = &[
     },
     ServiceCategory {
         name: "UV Gel",
-        services: &[
-            "UV Gel",
-            "UV Gel Fill-ins",
-            "UV Gel Pink &
- White",
-        ],
+        services: &["UV Gel", "UV Gel Fill-ins", "UV Gel Pink & White"],
     },
     ServiceCategory {
         name: "Polish",
-        services: &[
-            "French",
-            "Hands Polish Change",
-            "Toes Polish
- Change",
-        ],
+        services: &["French", "Hands Polish Change", "Toes Polish Change"],
     },
     ServiceCategory {
         name: "Waxing",
         services: &[
-            "Eyebrow",
+            "Eyebrow Wax",
             "Lip Wax",
             "Arm Wax",
-            "Half Arm",
+            "Half Arm Wax",
             "Leg Wax",
             "Underarm",
             "Bikini Wax",
-            "Brazilian",
+            "Brazilian Wax",
         ],
     },
 ];
