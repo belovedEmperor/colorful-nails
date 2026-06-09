@@ -1,4 +1,4 @@
-use crate::components::errors::ErrorView;
+use crate::{components::errors::ErrorView, pages::services::SERVICE_CATEGORIES};
 use leptos::prelude::*;
 
 #[derive(serde::Serialize, serde::Deserialize, Clone)]
@@ -7,7 +7,7 @@ pub struct Appointment {
     pub id: uuid::Uuid,
     pub user_id: uuid::Uuid,
     pub scheduled_at: chrono::DateTime<chrono::Utc>,
-    pub services: Option<Vec<String>>,
+    pub services: Option<String>,
     pub notes: Option<String>,
     pub accepted: bool,
     pub created_at: chrono::DateTime<chrono::Utc>,
@@ -16,7 +16,7 @@ pub struct Appointment {
 #[server]
 pub async fn create_appointment(
     scheduled_at: String,
-    services: Option<Vec<String>>,
+    services: Option<String>,
     notes: Option<String>,
     first_name: String,
     last_name: String,
@@ -59,7 +59,7 @@ pub async fn create_appointment(
     ",
         user_id,
         scheduled_at,
-        services.as_deref(),
+        services,
         notes
     )
     .fetch_one(&db)
@@ -137,7 +137,7 @@ pub fn Booking() -> impl IntoView {
                                 placeholder="(570) 455-2799"
                                 id="phone"
                                 name="phone"
-                                pattern="\\([0-9]{3}\\)-[0-9]{3}-[0-9]{4}"
+                                pattern="\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}"
                                 required
                                 on:input:target=move |event| {
                                     set_phone_number
@@ -161,7 +161,33 @@ pub fn Booking() -> impl IntoView {
 
                         <div class="input-container">
                             <label for="services">"Services:"</label>
-                            <select class="input"></select>
+                            <select class="input" name="services" id="services">
+                                <option value="">Choose a service</option>
+                                {SERVICE_CATEGORIES
+                                    .iter()
+                                    .map(|service_category| {
+                                        view! {
+                                            <hr />
+                                            <optgroup label=service_category
+                                                .name>
+                                                {service_category
+                                                    .services
+                                                    .iter()
+                                                    .map(|service| {
+                                                        view! {
+                                                            <option value=service
+                                                                .to_lowercase()
+                                                                .retain(|character| {
+                                                                    !character.is_whitespace()
+                                                                })>{*service}</option>
+                                                        }
+                                                    })
+                                                    .collect_view()}
+                                            </optgroup>
+                                        }
+                                    })
+                                    .collect_view()}
+                            </select>
                         </div>
 
                         <div class="input-container">

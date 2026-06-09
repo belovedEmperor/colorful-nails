@@ -1,12 +1,12 @@
 use crate::components::errors::ErrorView;
 use leptos::prelude::*;
 
-struct ServiceCategory {
-    name: &'static str,
-    services: &'static [&'static str],
+pub struct ServiceCategory {
+    pub name: &'static str,
+    pub services: &'static [&'static str],
 }
 
-const SERVICE_CATEGORIES: &[ServiceCategory] = &[
+pub const SERVICE_CATEGORIES: &[ServiceCategory] = &[
     ServiceCategory {
         name: "Manicure & Pedicure",
         services: &["Manicure", "Gel Manicure", "Pedicure"],

@@ -13,7 +13,7 @@ CREATE TABLE appointments (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id),
     scheduled_at TIMESTAMPTZ NOT NULL,
-    services TEXT[],
+    services TEXT,
     notes TEXT,
     accepted BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
