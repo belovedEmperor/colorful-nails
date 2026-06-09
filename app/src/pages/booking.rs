@@ -110,7 +110,7 @@ pub fn Booking() -> impl IntoView {
                         <div class="input-container">
                             <label for="first_name">"First Name:*"</label>
                             <input
-                                class="input"
+                                class="input shadow"
                                 type="text"
                                 placeholder="Jane"
                                 id="first_name"
@@ -121,7 +121,7 @@ pub fn Booking() -> impl IntoView {
                         <div class="input-container">
                             <label for="last_name">"Last Name:"</label>
                             <input
-                                class="input"
+                                class="input shadow"
                                 type="text"
                                 placeholder="Doe"
                                 id="last_name"
@@ -132,7 +132,7 @@ pub fn Booking() -> impl IntoView {
                         <div class="input-container">
                             <label for="phone">"Phone Number:*"</label>
                             <input
-                                class="input"
+                                class="input shadow"
                                 type="tel"
                                 placeholder="(570) 455-2799"
                                 id="phone"
@@ -150,7 +150,7 @@ pub fn Booking() -> impl IntoView {
                         <div class="input-container">
                             <label for="email">"Email:*"</label>
                             <input
-                                class="input"
+                                class="input shadow"
                                 type="email"
                                 placeholder="example@example.com"
                                 id="email"
@@ -161,7 +161,7 @@ pub fn Booking() -> impl IntoView {
 
                         <div class="input-container">
                             <label for="services">"Services:"</label>
-                            <select class="input" name="services" id="services">
+                            <select class="input shadow" name="services" id="services">
                                 <option value="">Choose a service</option>
                                 {SERVICE_CATEGORIES
                                     .iter()
@@ -193,7 +193,7 @@ pub fn Booking() -> impl IntoView {
                         <div class="input-container">
                             <label for="scheduled_at">"Preferred Date:*"</label>
                             <input
-                                class="input"
+                                class="input shadow"
                                 type="datetime-local"
                                 id="scheduled_at"
                                 name="scheduled_at"
@@ -203,7 +203,7 @@ pub fn Booking() -> impl IntoView {
 
                         <div class="input-container col-span-2">
                             <label for="notes">"Notes:"</label>
-                            <textarea class="input h-16" id="notes" name="notes" rows="5" />
+                            <textarea class="input h-16 shadow" id="notes" name="notes" rows="5" />
                         </div>
 
                         {move || {
