@@ -9,8 +9,8 @@ pub fn Footer() -> impl IntoView {
         <ErrorBoundary fallback=|errors| {
             view! { <ErrorView errors=errors /> }
         }>
-            <div class="bg-primary min-h-20">
-                <div class="page-container h-20 items-center grid grid-rows-2">
+            <div class="bg-primary min-h-28">
+                <div class="page-container h-28 items-center grid grid-rows-2">
                     <div class="grid grid-cols-3 w-full">
                         <p class="text-left">"Colorful Nails & Spa"<br /></p>
                         <a
