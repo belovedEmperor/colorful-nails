@@ -16,6 +16,12 @@ tower.workspace = true
 tower-http.workspace = true
 
 dotenvy = "0.15.7"
+lettre = { version = "0.11.22", features = [
+  "builder",
+  "smtp-transport",
+  "tokio1",
+  "tokio1-native-tls"
+] }
 reqwest.workspace = true
 serde.workspace = true
 serde_json.workspace = true

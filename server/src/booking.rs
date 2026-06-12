@@ -1,9 +1,10 @@
-use app::Telegram;
+use app::{Appointment, Telegram};
 use axum::{Json, extract::State};
+use lettre::{AsyncSmtpTransport, AsyncTransport as _, Tokio1Executor};
 use reqwest::StatusCode;
 use serde::Deserialize;
 use serde_json::json;
-use sqlx::{PgPool, types::uuid};
+use sqlx::{PgPool, query, types::uuid};
 
 #[derive(Deserialize)]
 pub struct TelegramUpdate {
@@ -33,6 +34,8 @@ pub async fn telegram_webhook(
     State(db): State<PgPool>,
     State(client): State<reqwest::Client>,
     State(telegram): State<Telegram>,
+    State(gmail): State<Gmail>,
+    State(mailer): State<AsyncSmtpTransport<Tokio1Executor>>,
     Json(update): Json<TelegramUpdate>,
 ) -> StatusCode {
     let Some(callback_query) = update.callback_query else {
@@ -56,18 +59,22 @@ pub async fn telegram_webhook(
         _ => return StatusCode::OK,
     };
 
-    sqlx::query!(
+    let Ok(appointment) = sqlx::query_as!(
+        Appointment,
         "
-            UPDATE appointments
-            SET accepted = $1
-            WHERE id = $2
+UPDATE appointments
+SET accepted = $1
+WHERE id = $2
+RETURNING *
         ",
         accepted,
         appointment_id
     )
-    .execute(&db)
+    .fetch_one(&db)
     .await
-    .ok();
+    else {
+        return StatusCode::OK;
+    };
 
     // Removes buttons from text
     client
@@ -103,11 +110,65 @@ pub async fn telegram_webhook(
             telegram.token,
         ))
         .json(&json!({
-            "callback_query_id":id
+            "callback_query_id": callback_query.id
         }))
         .send()
         .await
         .ok();
 
+    email_customer(gmail, db, appointment, mailer).await.ok();
+
     StatusCode::OK
+}
+
+#[derive(Clone)]
+pub struct Gmail {
+    pub from: String,
+    pub app_password: String,
+}
+
+pub async fn email_customer(
+    gmail: Gmail,
+    db: PgPool,
+    appointment: Appointment,
+    mailer: AsyncSmtpTransport<Tokio1Executor>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let user_email = query!(
+        "
+SELECT email FROM users
+WHERE id = $1
+        ",
+        appointment.user_id
+    )
+    .fetch_one(&db)
+    .await?
+    .email;
+
+    let email = lettre::Message::builder()
+        .from(gmail.from.parse()?)
+        .to(user_email.parse()?)
+        .subject(if appointment.accepted {
+            "Appointment Accepted"
+        } else {
+            "Appointment Denied"
+        })
+        .body(format!(
+            "
+Your appointment at {} has been {}
+Service: {}
+Notes: {}
+            ",
+            appointment.scheduled_at,
+            if appointment.accepted {
+                "accepted!"
+            } else {
+                "denied."
+            },
+            appointment.services.unwrap_or_default(),
+            appointment.notes.unwrap_or_default()
+        ))?;
+
+    mailer.send(email).await?;
+
+    Ok(())
 }

@@ -1,1 +1,1 @@
-pub mod telegram;
+pub mod booking;

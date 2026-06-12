@@ -198,9 +198,9 @@ pub async fn create_appointment(
     let user = query_as!(
         User,
         "
-            INSERT INTO users (first_name,last_name,phone,email)
-            VALUES ($1,$2,$3,$4)
-            RETURNING *
+INSERT INTO users (first_name,last_name,phone,email)
+VALUES ($1,$2,$3,$4)
+RETURNING *
         ",
         first_name,
         last_name,
@@ -216,10 +216,10 @@ pub async fn create_appointment(
     let appointment = query_as!(
         Appointment,
         "
-        INSERT INTO appointments (user_id,scheduled_at,services,notes)
-        VALUES ($1,$2,$3,$4)
-        RETURNING *
-    ",
+INSERT INTO appointments (user_id,scheduled_at,services,notes)
+VALUES ($1,$2,$3,$4)
+RETURNING *
+        ",
         user_id,
         scheduled_at,
         services,
@@ -238,14 +238,14 @@ pub async fn create_appointment(
 
     let text = format!(
         "
-        <b>New Appointment</b>
+<b>New Appointment</b>
 
-        <b>Name:</b> {} {}
-        <b>Phone:</b> {}
-        <b>Email:</b> {}
-        <b>Service:</b> {}
-        <b>Date & Time:</b> {}
-        <b>Notes:</b> {}
+<b>Name:</b> {} {}
+<b>Phone:</b> {}
+<b>Email:</b> {}
+<b>Service:</b> {}
+<b>Date & Time:</b> {}
+<b>Notes:</b> {}
         ",
         user.first_name,
         user.last_name,

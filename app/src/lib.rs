@@ -37,9 +37,12 @@ use crate::pages::services::Services;
 use crate::components::footer::Footer;
 use crate::components::header::Header;
 
-/// Telegram client for server
+/// Structs
 #[cfg(feature = "ssr")]
 pub use crate::pages::booking::Telegram;
+
+#[cfg(feature = "ssr")]
+pub use crate::pages::booking::Appointment;
 
 /// An app router which renders the homepage and handles 404's
 #[component]

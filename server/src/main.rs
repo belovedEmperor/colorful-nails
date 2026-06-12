@@ -6,11 +6,12 @@ use leptos::{
     prelude::provide_context,
 };
 use leptos_axum::{LeptosRoutes as _, generate_route_list};
+use lettre::{AsyncSmtpTransport, Tokio1Executor, transport::smtp::authentication::Credentials};
 use sqlx::PgPool;
 
-use crate::telegram::telegram_webhook;
+use crate::booking::{Gmail, telegram_webhook};
 
-mod telegram;
+mod booking;
 
 #[derive(Clone)]
 struct AppState {
@@ -18,6 +19,8 @@ struct AppState {
     db: PgPool,
     client: reqwest::Client,
     telegram: Telegram,
+    gmail: Gmail,
+    mailer: AsyncSmtpTransport<Tokio1Executor>,
 }
 
 impl FromRef<AppState> for LeptosOptions {
@@ -40,6 +43,16 @@ impl FromRef<AppState> for Telegram {
         state.telegram.clone()
     }
 }
+impl FromRef<AppState> for Gmail {
+    fn from_ref(state: &AppState) -> Self {
+        state.gmail.clone()
+    }
+}
+impl FromRef<AppState> for AsyncSmtpTransport<Tokio1Executor> {
+    fn from_ref(state: &AppState) -> Self {
+        state.mailer.clone()
+    }
+}
 
 #[tokio::main]
 async fn main() {
@@ -57,15 +70,31 @@ async fn main() {
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
 
-    let token = std::env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN must be set");
-    let chat_id = std::env::var("TELEGRAM_CHAT_ID").expect("TELEGRAM_CHAT_ID must be set");
-    let telegram = Telegram { token, chat_id };
+    let telegram = Telegram {
+        token: std::env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN must be set"),
+        chat_id: std::env::var("TELEGRAM_CHAT_ID").expect("TELEGRAM_CHAT_ID must be set"),
+    };
+
+    let gmail = Gmail {
+        from: std::env::var("GMAIL_FROM").expect("GMAIL_FROM must be set"),
+        app_password: std::env::var("GMAIL_APP_PASSWORD").expect("GMAIL_APP_PASSWORD must be set"),
+    };
+
+    let credentials = Credentials::new(gmail.clone().from, gmail.clone().app_password);
+
+    let mailer: AsyncSmtpTransport<Tokio1Executor> =
+        AsyncSmtpTransport::<Tokio1Executor>::relay("smtp.gmail.com")
+            .expect("Gmail smtp should be available")
+            .credentials(credentials)
+            .build();
 
     let state = AppState {
         leptos_options,
         db: pool,
         client: reqwest::Client::new(),
         telegram,
+        gmail,
+        mailer,
     };
 
     let app = Router::new()
