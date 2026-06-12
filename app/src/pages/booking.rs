@@ -258,7 +258,14 @@ pub async fn create_appointment(
         appointment_details.notes.unwrap_or_else(String::new)
     );
 
-    message_telegram(client, telegram.token, telegram.chat_id, text).await?;
+    message_telegram(
+        client,
+        telegram.token,
+        telegram.chat_id,
+        text,
+        appointment.id,
+    )
+    .await?;
 
     Ok(appointment)
 }
@@ -300,10 +307,21 @@ pub async fn message_telegram(
     token: String,
     chat_id: String,
     text: String,
+    appointment_id: uuid::Uuid,
 ) -> Result<(), ServerFnError> {
     client
         .post(format!("https://api.telegram.org/bot{token}/sendMessage"))
-        .json(&serde_json::json!({"chat_id":chat_id,"text":text,"parse_mode":"HTML"}))
+        .json(&serde_json::json!({
+            "chat_id":chat_id,
+            "text":text,
+            "parse_mode":"HTML",
+            "reply_markup": {
+                "inline_keyboard": [[
+                    {"text": "✅ Accept", "callback_data": format!("accept:{appointment_id}")},
+                    {"text": "❌ Deny", "callback_data": format!("deny:{appointment_id}")}
+                ]]
+            }
+        }))
         .send()
         .await
         .map_err(ServerFnError::new)?;

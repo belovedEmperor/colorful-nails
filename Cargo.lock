@@ -2762,6 +2762,7 @@ dependencies = [
  "leptos_axum",
  "log",
  "reqwest",
+ "serde",
  "serde_json",
  "simple_logger",
  "sqlx",

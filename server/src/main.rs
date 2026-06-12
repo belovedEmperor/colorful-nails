@@ -8,6 +8,10 @@ use leptos::{
 use leptos_axum::{LeptosRoutes as _, generate_route_list};
 use sqlx::PgPool;
 
+use crate::telegram::telegram_webhook;
+
+mod telegram;
+
 #[derive(Clone)]
 struct AppState {
     leptos_options: LeptosOptions,
@@ -19,6 +23,21 @@ struct AppState {
 impl FromRef<AppState> for LeptosOptions {
     fn from_ref(state: &AppState) -> Self {
         state.leptos_options.clone()
+    }
+}
+impl FromRef<AppState> for PgPool {
+    fn from_ref(state: &AppState) -> Self {
+        state.db.clone()
+    }
+}
+impl FromRef<AppState> for reqwest::Client {
+    fn from_ref(state: &AppState) -> Self {
+        state.client.clone()
+    }
+}
+impl FromRef<AppState> for Telegram {
+    fn from_ref(state: &AppState) -> Self {
+        state.telegram.clone()
     }
 }
 
@@ -50,6 +69,7 @@ async fn main() {
     };
 
     let app = Router::new()
+        .route("/telegram/webhook", axum::routing::post(telegram_webhook))
         .leptos_routes_with_context(
             &state,
             routes,
