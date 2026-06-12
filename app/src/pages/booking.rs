@@ -1,98 +1,6 @@
 use crate::{components::errors::ErrorView, pages::services::SERVICE_CATEGORIES};
 use leptos::prelude::*;
 
-#[derive(serde::Serialize, serde::Deserialize, Clone)]
-#[cfg_attr(feature = "ssr", derive(sqlx::FromRow))]
-pub struct Appointment {
-    pub id: uuid::Uuid,
-    pub user_id: uuid::Uuid,
-    pub scheduled_at: chrono::DateTime<chrono::Utc>,
-    pub services: Option<String>,
-    pub notes: Option<String>,
-    pub accepted: bool,
-    pub created_at: chrono::DateTime<chrono::Utc>,
-}
-
-#[server]
-pub async fn create_appointment(
-    scheduled_at: String,
-    services: Option<String>,
-    notes: Option<String>,
-    first_name: String,
-    last_name: String,
-    phone: String,
-    email: String,
-) -> Result<Appointment, ServerFnError> {
-    use chrono::NaiveDateTime;
-    use sqlx::{PgPool, query, query_as};
-
-    let scheduled_at = NaiveDateTime::parse_from_str(&scheduled_at, "%Y-%m-%dT%H:%M")
-        .map_err(|error| ServerFnError::new(format!("Invalid date: {error}")))?
-        .and_utc();
-
-    let db =
-        use_context::<PgPool>().ok_or_else(|| ServerFnError::new("DB should be in context"))?;
-
-    let user_uid = query!(
-        "
-            INSERT INTO users (first_name,last_name,phone,email)
-            VALUES ($1,$2,$3,$4)
-            RETURNING id
-        ",
-        first_name,
-        last_name,
-        phone,
-        email
-    )
-    .fetch_one(&db)
-    .await
-    .map_err(ServerFnError::new)?;
-
-    let user_id: uuid::Uuid = user_uid.id;
-
-    let appointment = query_as!(
-        Appointment,
-        "
-        INSERT INTO appointments (user_id,scheduled_at,services,notes)
-        VALUES ($1,$2,$3,$4)
-        RETURNING *
-    ",
-        user_id,
-        scheduled_at,
-        services,
-        notes
-    )
-    .fetch_one(&db)
-    .await
-    .map_err(ServerFnError::new)?;
-
-    Ok(appointment)
-}
-
-fn format_phone_number(input: &str) -> String {
-    let digits: String = input.chars().filter(|char| char.is_ascii_digit()).collect();
-
-    match digits.len() {
-        0 => String::new(),
-        1..=3 => format!("({digits}"),
-        4..=6 => {
-            let (area_code, rest) = digits.split_at(3);
-            format!("({area_code}) {rest}")
-        }
-        7..=10 => {
-            let (area_code, rest) = digits.split_at(3);
-            let (middle, rest) = rest.split_at(3);
-            format!("({area_code}) {middle}-{rest}")
-        }
-        _ => {
-            let (area_code, rest) = digits.split_at(3);
-            let (middle, rest) = rest.split_at(3);
-            let (rest, _) = rest.split_at(4);
-            format!("({area_code}) {middle}-{rest}")
-        }
-    }
-}
-
 #[component]
 pub fn Booking() -> impl IntoView {
     let action = ServerAction::<CreateAppointment>::new();
@@ -241,4 +149,164 @@ pub fn Booking() -> impl IntoView {
             </div>
         </ErrorBoundary>
     }
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[cfg_attr(feature = "ssr", derive(sqlx::FromRow))]
+#[cfg_attr(not(feature = "ssr"), allow(dead_code))]
+pub struct User {
+    pub id: uuid::Uuid,
+    pub first_name: String,
+    pub last_name: String,
+    pub phone: String,
+    pub email: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Clone)]
+#[cfg_attr(feature = "ssr", derive(sqlx::FromRow))]
+pub struct Appointment {
+    pub id: uuid::Uuid,
+    pub user_id: uuid::Uuid,
+    pub scheduled_at: chrono::DateTime<chrono::Utc>,
+    pub services: Option<String>,
+    pub notes: Option<String>,
+    pub accepted: bool,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+#[server]
+pub async fn create_appointment(
+    scheduled_at: String,
+    services: Option<String>,
+    notes: Option<String>,
+    first_name: String,
+    last_name: String,
+    phone: String,
+    email: String,
+) -> Result<Appointment, ServerFnError> {
+    use chrono::NaiveDateTime;
+    use sqlx::{PgPool, query_as};
+
+    let scheduled_at = NaiveDateTime::parse_from_str(&scheduled_at, "%Y-%m-%dT%H:%M")
+        .map_err(|error| ServerFnError::new(format!("Invalid date: {error}")))?
+        .and_utc();
+
+    let db =
+        use_context::<PgPool>().ok_or_else(|| ServerFnError::new("DB should be in context"))?;
+
+    let user = query_as!(
+        User,
+        "
+            INSERT INTO users (first_name,last_name,phone,email)
+            VALUES ($1,$2,$3,$4)
+            RETURNING *
+        ",
+        first_name,
+        last_name,
+        phone,
+        email
+    )
+    .fetch_one(&db)
+    .await
+    .map_err(ServerFnError::new)?;
+
+    let user_id: uuid::Uuid = user.id;
+
+    let appointment = query_as!(
+        Appointment,
+        "
+        INSERT INTO appointments (user_id,scheduled_at,services,notes)
+        VALUES ($1,$2,$3,$4)
+        RETURNING *
+    ",
+        user_id,
+        scheduled_at,
+        services,
+        notes
+    )
+    .fetch_one(&db)
+    .await
+    .map_err(ServerFnError::new)?;
+
+    let client = use_context::<reqwest::Client>()
+        .ok_or_else(|| ServerFnError::new("reqwest client should be in context"))?;
+    let telegram = use_context::<Telegram>()
+        .ok_or_else(|| ServerFnError::new("Telegram should be in context"))?;
+
+    let appointment_details = appointment.clone();
+
+    let text = format!(
+        "
+        <b>New Appointment</b>
+
+        <b>Name:</b> {} {}
+        <b>Phone:</b> {}
+        <b>Email:</b> {}
+        <b>Service:</b> {}
+        <b>Date & Time:</b> {}
+        <b>Notes:</b> {}
+        ",
+        user.first_name,
+        user.last_name,
+        user.phone,
+        user.email,
+        appointment_details
+            .services
+            .unwrap_or_else(|| "N/A".to_owned()),
+        appointment_details.scheduled_at,
+        appointment_details.notes.unwrap_or_else(String::new)
+    );
+
+    message_telegram(client, telegram.token, telegram.chat_id, text).await?;
+
+    Ok(appointment)
+}
+
+fn format_phone_number(input: &str) -> String {
+    let digits: String = input.chars().filter(|char| char.is_ascii_digit()).collect();
+
+    match digits.len() {
+        0 => String::new(),
+        1..=3 => format!("({digits}"),
+        4..=6 => {
+            let (area_code, rest) = digits.split_at(3);
+            format!("({area_code}) {rest}")
+        }
+        7..=10 => {
+            let (area_code, rest) = digits.split_at(3);
+            let (middle, rest) = rest.split_at(3);
+            format!("({area_code}) {middle}-{rest}")
+        }
+        _ => {
+            let (area_code, rest) = digits.split_at(3);
+            let (middle, rest) = rest.split_at(3);
+            let (rest, _) = rest.split_at(4);
+            format!("({area_code}) {middle}-{rest}")
+        }
+    }
+}
+
+#[cfg(feature = "ssr")]
+#[derive(Clone)]
+pub struct Telegram {
+    pub token: String,
+    pub chat_id: String,
+}
+
+#[cfg(feature = "ssr")]
+pub async fn message_telegram(
+    client: reqwest::Client,
+    token: String,
+    chat_id: String,
+    text: String,
+) -> Result<(), ServerFnError> {
+    client
+        .post(format!("https://api.telegram.org/bot{token}/sendMessage"))
+        .json(&serde_json::json!({"chat_id":chat_id,"text":text,"parse_mode":"HTML"}))
+        .send()
+        .await
+        .map_err(ServerFnError::new)?;
+
+    Ok(())
 }

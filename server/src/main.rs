@@ -1,4 +1,4 @@
-use app::{App, shell};
+use app::{App, Telegram, shell};
 use axum::{Router, extract::FromRef};
 use leptos::{
     config::{LeptosOptions, get_configuration},
@@ -12,6 +12,8 @@ use sqlx::PgPool;
 struct AppState {
     leptos_options: LeptosOptions,
     db: PgPool,
+    client: reqwest::Client,
+    telegram: Telegram,
 }
 
 impl FromRef<AppState> for LeptosOptions {
@@ -35,9 +37,16 @@ async fn main() {
     let leptos_options = configuration.leptos_options;
     // Generate the list of routes in your Leptos App
     let routes = generate_route_list(App);
+
+    let token = std::env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN must be set");
+    let chat_id = std::env::var("TELEGRAM_CHAT_ID").expect("TELEGRAM_CHAT_ID must be set");
+    let telegram = Telegram { token, chat_id };
+
     let state = AppState {
         leptos_options,
         db: pool,
+        client: reqwest::Client::new(),
+        telegram,
     };
 
     let app = Router::new()
@@ -46,7 +55,13 @@ async fn main() {
             routes,
             {
                 let pool = state.db.clone();
-                move || provide_context(pool.clone())
+                let client = state.client.clone();
+                let telegram = state.telegram.clone();
+                move || {
+                    provide_context(pool.clone());
+                    provide_context(client.clone());
+                    provide_context(telegram.clone());
+                }
             },
             {
                 let leptos_options = state.leptos_options.clone();
