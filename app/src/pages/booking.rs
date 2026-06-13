@@ -183,9 +183,24 @@ pub async fn create_appointment(
     use chrono::NaiveDateTime;
     use sqlx::{PgPool, query_as};
 
+    if first_name.trim().is_empty() {
+        return Err(ServerFnError::new("First name is required"));
+    }
+    if email.trim().is_empty() || !email.contains('@') {
+        return Err(ServerFnError::new("Valid email is required"));
+    }
+
+    let digits: String = phone.chars().filter(|c| c.is_ascii_digit()).collect();
+    if digits.len() != 10 {
+        return Err(ServerFnError::new("Phone must be a 10-digit US number"));
+    }
+
     let scheduled_at = NaiveDateTime::parse_from_str(&scheduled_at, "%Y-%m-%dT%H:%M")
         .map_err(|error| ServerFnError::new(format!("Invalid date: {error}")))?
         .and_utc();
+    if scheduled_at <= chrono::Utc::now() {
+        return Err(ServerFnError::new("Appointment must be in the future"));
+    }
 
     let db =
         use_context::<PgPool>().ok_or_else(|| ServerFnError::new("DB should be in context"))?;
