@@ -82,13 +82,8 @@ pub fn Booking() -> impl IntoView {
                                                     .services
                                                     .iter()
                                                     .map(|service| {
-                                                        view! {
-                                                            <option value=service
-                                                                .to_lowercase()
-                                                                .retain(|character| {
-                                                                    !character.is_whitespace()
-                                                                })>{*service}</option>
-                                                        }
+                                                        let value = service.to_lowercase().replace(' ', "");
+                                                        view! { <option value=value>{*service}</option> }
                                                     })
                                                     .collect_view()}
                                             </optgroup>
