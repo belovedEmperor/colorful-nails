@@ -127,6 +127,10 @@ pub struct Gmail {
     pub app_password: String,
 }
 
+/// Send accept/deny email to customer via Gmail SMTP
+///
+/// # Errors
+/// Returns `Err` if db fails to fetch user email or email fails to send
 pub async fn email_customer(
     gmail: Gmail,
     db: PgPool,
