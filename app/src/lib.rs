@@ -14,7 +14,7 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <AutoReload options=options.clone() />
                 <Stylesheet id="leptos" href="/pkg/colorful-nails.css" />
-                <HydrationScripts options />
+                <HydrationScripts options islands=true />
                 <MetaTags />
             </head>
             <body class="bg-background">

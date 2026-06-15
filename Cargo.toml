@@ -3,7 +3,7 @@ resolver = "2"
 members = ["app", "frontend", "server"]
 
 [workspace.dependencies]
-leptos = { version = "0.8.2" }
+leptos = { version = "0.8.2", features = ["islands"] }
 leptos_axum = { version = "0.8.2" }
 leptos_meta = { version = "0.8.2" }
 leptos_router = { version = "0.8.2" }

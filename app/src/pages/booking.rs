@@ -5,9 +5,6 @@ use crate::{
 use leptos::prelude::*;
 #[component]
 pub fn Booking() -> impl IntoView {
-    let action = ServerAction::<CreateAppointment>::new();
-    let (phone_number, set_phone_number) = signal(String::new());
-
     view! {
         <ErrorBoundary fallback=|errors| {
             view! { <ErrorView errors=errors /> }
@@ -40,177 +37,7 @@ pub fn Booking() -> impl IntoView {
                             "Your details"
                         </h2>
 
-                        <ActionForm action=action>
-                            <div class="grid grid-cols-2 gap-x-6 gap-y-5">
-
-                                <div class="input-container">
-                                    <label class="input-label" for="first_name">
-                                        "First Name "
-                                        <span class="text-coral-lacquer">"*"</span>
-                                    </label>
-                                    <input
-                                        class="input shadow"
-                                        type="text"
-                                        placeholder="Jane"
-                                        id="first_name"
-                                        name="first_name"
-                                        required
-                                    />
-                                </div>
-
-                                <div class="input-container">
-                                    <label class="input-label" for="last_name">
-                                        "Last Name"
-                                    </label>
-                                    <input
-                                        class="input shadow"
-                                        type="text"
-                                        placeholder="Doe"
-                                        id="last_name"
-                                        name="last_name"
-                                    />
-                                </div>
-
-                                <div class="input-container">
-                                    <label class="input-label" for="phone">
-                                        "Phone "
-                                        <span class="text-coral-lacquer">"*"</span>
-                                    </label>
-                                    <input
-                                        class="input shadow"
-                                        type="tel"
-                                        placeholder="(570) 455-2799"
-                                        id="phone"
-                                        name="phone"
-                                        pattern="\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}"
-                                        required
-                                        on:input:target=move |event| {
-                                            set_phone_number
-                                                .set(format_phone_number(&event.target().value()));
-                                        }
-                                        prop:value=phone_number
-                                    />
-                                </div>
-
-                                <div class="input-container">
-                                    <label class="input-label" for="email">
-                                        "Email "
-                                        <span class="text-coral-lacquer">"*"</span>
-                                    </label>
-                                    <input
-                                        class="input shadow"
-                                        type="email"
-                                        placeholder="jane@example.com"
-                                        id="email"
-                                        name="email"
-                                        required
-                                    />
-                                </div>
-
-                                <div class="input-container">
-                                    <label class="input-label" for="services">
-                                        "Service"
-                                    </label>
-                                    <select class="input shadow" name="services" id="services">
-                                        <option value="">"Choose a service"</option>
-                                        {SERVICE_CATEGORIES
-                                            .iter()
-                                            .map(|service_category| {
-                                                view! {
-                                                    <hr />
-                                                    <optgroup label=service_category
-                                                        .name>
-                                                        {service_category
-                                                            .services
-                                                            .iter()
-                                                            .map(|service| {
-                                                                view! { <option value=*service>{*service}</option> }
-                                                            })
-                                                            .collect_view()}
-                                                    </optgroup>
-                                                }
-                                            })
-                                            .collect_view()}
-                                    </select>
-                                </div>
-
-                                <div class="input-container">
-                                    <label class="input-label" for="scheduled_at">
-                                        "Preferred Date "
-                                        <span class="text-coral-lacquer">"*"</span>
-                                    </label>
-                                    <input
-                                        class="input shadow"
-                                        type="datetime-local"
-                                        id="scheduled_at"
-                                        name="scheduled_at"
-                                        required
-                                    />
-                                </div>
-
-                                <div class="input-container col-span-2">
-                                    <label class="input-label" for="notes">
-                                        "Notes"
-                                    </label>
-                                    <textarea
-                                        class="input h-24 shadow"
-                                        id="notes"
-                                        name="notes"
-                                        rows="4"
-                                        placeholder="Anything we should know? Design ideas, allergies, etc."
-                                    />
-                                </div>
-
-                                // Status message
-                                <div class="col-span-2">
-                                    {move || {
-                                        if action.pending().get() {
-                                            view! {
-                                                <Alert variant="info">"Submitting your request…"</Alert>
-                                            }
-                                                .into_any()
-                                        } else {
-                                            match action.value().get() {
-                                                None => view! { <div /> }.into_any(),
-                                                Some(Ok(appointment)) => {
-                                                    view! {
-                                                        <Alert variant="success" title="Request received!">
-                                                            "Booking ID: "
-                                                            {appointment.id.to_string()}
-                                                            ". We’ll email you to confirm shortly."
-                                                        </Alert>
-                                                    }
-                                                        .into_any()
-                                                }
-                                                Some(Err(error)) => {
-                                                    view! {
-                                                        <Alert variant="error" title="Something went wrong">
-                                                            {error.to_string()}
-                                                            " Try again or call "
-                                                            <a class="link" href="tel:+15704552799">
-                                                                "(570) 455-2799"
-                                                            </a>
-                                                            "."
-                                                        </Alert>
-                                                    }
-                                                        .into_any()
-                                                }
-                                            }
-                                        }
-                                    }}
-                                </div>
-
-                                // Submit
-                                <button
-                                    class="btn btn-primary btn-lg col-span-2 w-full"
-                                    type="submit"
-                                    disabled=move || action.pending().get()
-                                >
-                                    "Book Now"
-                                </button>
-
-                            </div>
-                        </ActionForm>
+                        <BookingForm />
                     </Card>
 
                     // ── Sidebar ─────────────────────────────────────
@@ -293,6 +120,183 @@ pub fn Booking() -> impl IntoView {
             </section>
 
         </ErrorBoundary>
+    }
+}
+
+#[island]
+fn BookingForm() -> impl IntoView {
+    let action = ServerAction::<CreateAppointment>::new();
+    let (phone_number, set_phone_number) = signal(String::new());
+
+    view! {
+        <ActionForm action=action>
+            <div class="grid grid-cols-2 gap-x-6 gap-y-5">
+
+                <div class="input-container">
+                    <label class="input-label" for="first_name">
+                        "First Name "
+                        <span class="text-coral-lacquer">"*"</span>
+                    </label>
+                    <input
+                        class="input shadow"
+                        type="text"
+                        placeholder="Jane"
+                        id="first_name"
+                        name="first_name"
+                        required
+                    />
+                </div>
+
+                <div class="input-container">
+                    <label class="input-label" for="last_name">
+                        "Last Name"
+                    </label>
+                    <input
+                        class="input shadow"
+                        type="text"
+                        placeholder="Doe"
+                        id="last_name"
+                        name="last_name"
+                    />
+                </div>
+
+                <div class="input-container">
+                    <label class="input-label" for="phone">
+                        "Phone "
+                        <span class="text-coral-lacquer">"*"</span>
+                    </label>
+                    <input
+                        class="input shadow"
+                        type="tel"
+                        placeholder="(570) 455-2799"
+                        id="phone"
+                        name="phone"
+                        pattern="\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}"
+                        required
+                        on:input:target=move |event| {
+                            set_phone_number.set(format_phone_number(&event.target().value()));
+                        }
+                        prop:value=phone_number
+                    />
+                </div>
+
+                <div class="input-container">
+                    <label class="input-label" for="email">
+                        "Email "
+                        <span class="text-coral-lacquer">"*"</span>
+                    </label>
+                    <input
+                        class="input shadow"
+                        type="email"
+                        placeholder="jane@example.com"
+                        id="email"
+                        name="email"
+                        required
+                    />
+                </div>
+
+                <div class="input-container">
+                    <label class="input-label" for="services">
+                        "Service"
+                    </label>
+                    <select class="input shadow" name="services" id="services">
+                        <option value="">"Choose a service"</option>
+                        {SERVICE_CATEGORIES
+                            .iter()
+                            .map(|service_category| {
+                                view! {
+                                    <hr />
+                                    <optgroup label=service_category
+                                        .name>
+                                        {service_category
+                                            .services
+                                            .iter()
+                                            .map(|service| {
+                                                view! { <option value=*service>{*service}</option> }
+                                            })
+                                            .collect_view()}
+                                    </optgroup>
+                                }
+                            })
+                            .collect_view()}
+                    </select>
+                </div>
+
+                <div class="input-container">
+                    <label class="input-label" for="scheduled_at">
+                        "Preferred Date "
+                        <span class="text-coral-lacquer">"*"</span>
+                    </label>
+                    <input
+                        class="input shadow"
+                        type="datetime-local"
+                        id="scheduled_at"
+                        name="scheduled_at"
+                        required
+                    />
+                </div>
+
+                <div class="input-container col-span-2">
+                    <label class="input-label" for="notes">
+                        "Notes"
+                    </label>
+                    <textarea
+                        class="input h-24 shadow"
+                        id="notes"
+                        name="notes"
+                        rows="4"
+                        placeholder="Anything we should know? Design ideas, allergies, etc."
+                    />
+                </div>
+
+                // Status message
+                <div class="col-span-2">
+                    {move || {
+                        if action.pending().get() {
+                            view! { <Alert variant="info">"Submitting your request…"</Alert> }
+                                .into_any()
+                        } else {
+                            match action.value().get() {
+                                None => view! { <div /> }.into_any(),
+                                Some(Ok(appointment)) => {
+                                    view! {
+                                        <Alert variant="success" title="Request received!">
+                                            "Booking ID: "
+                                            {appointment.id.to_string()}
+                                            ". We’ll email you to confirm shortly."
+                                        </Alert>
+                                    }
+                                        .into_any()
+                                }
+                                Some(Err(error)) => {
+                                    view! {
+                                        <Alert variant="error" title="Something went wrong">
+                                            {error.to_string()}
+                                            " Try again or call "
+                                            <a class="link" href="tel:+15704552799">
+                                                "(570) 455-2799"
+                                            </a>
+                                            "."
+                                        </Alert>
+                                    }
+                                        .into_any()
+                                }
+                            }
+                        }
+                    }}
+                </div>
+
+                // Submit
+                <button
+                    class="btn btn-primary btn-lg col-span-2 w-full"
+                    type="submit"
+                    disabled=move || action.pending().get()
+                >
+                    "Book Now"
+                </button>
+
+            </div>
+        </ActionForm>
     }
 }
 
