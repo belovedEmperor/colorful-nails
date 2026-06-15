@@ -3,7 +3,7 @@ use leptos::prelude::*;
 use crate::components::nail_bottle::NailBottle;
 
 /// Top navigation header — sticky, white, with Book Now CTA.
-#[component]
+#[island]
 pub fn Header() -> impl IntoView {
     let menu_open = RwSignal::new(false);
 
