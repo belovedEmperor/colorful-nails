@@ -1,18 +1,22 @@
-FROM rustlang/rust:nightly-alpine as builder
+FROM rust:stable-alpine as builder
 
 RUN apk update && \
-   apk add --no-cache bash curl npm libc-dev binaryen
+   apk add --no-cache bash curl npm libc-dev binaryen pkgconfig openssl-dev
 
 RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/leptos-rs/cargo-leptos/releases/latest/download/cargo-leptos-installer.sh | sh
 
-RUN rustup target add wasm32-unknown-unknown
+# Add wasm32 target AFTER copying project so rust-toolchain.toml is respected
 
 WORKDIR /work
 COPY . .
 
+RUN rustup target add wasm32-unknown-unknown
+
+ENV LEPTOS_TAILWIND_VERSION=v3.4.17
+
 RUN cargo leptos build --release -vv
 
-FROM rustlang/rust:nightly-alpine as runner
+FROM rust:stable-alpine as runner
 
 WORKDIR /app
 
