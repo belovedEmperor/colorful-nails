@@ -8,6 +8,7 @@ use leptos::{
 };
 use leptos_axum::{LeptosRoutes as _, generate_route_list};
 use sqlx::PgPool;
+use tower_http::{compression::CompressionLayer, services::ServeDir};
 
 use crate::booking::telegram_webhook;
 
@@ -84,6 +85,7 @@ async fn main() {
     };
 
     let app = Router::new()
+        .nest_service("/pkg", ServeDir::new("pkg"))
         .route("/telegram/webhook", axum::routing::post(telegram_webhook))
         .leptos_routes_with_context(
             &state,
@@ -104,7 +106,8 @@ async fn main() {
             },
         )
         .fallback(leptos_axum::file_and_error_handler::<AppState, _>(shell))
-        .with_state(state);
+        .with_state(state)
+        .layer(CompressionLayer::new());
 
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`

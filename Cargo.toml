@@ -325,8 +325,16 @@ lib-features = []
 # Optional. Defaults to false.
 lib-default-features = false
 
+lib-profile-release = "wasm-release"
+
 # need to be applied only to wasm build
 [profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+
+[profile.wasm-release]
+inherits = "release"
 opt-level = "z"
 lto = true
 codegen-units = 1
