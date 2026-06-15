@@ -316,7 +316,7 @@ pub struct Appointment {
     pub scheduled_at: chrono::DateTime<chrono::Utc>,
     pub services: Option<String>,
     pub notes: Option<String>,
-    pub accepted: bool,
+    pub accepted: Option<bool>,
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 

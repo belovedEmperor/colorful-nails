@@ -71,12 +71,13 @@ pub async fn telegram_webhook(
         .await
         .ok();
 
+    // Idempotency: only update if still pending (accepted IS NULL)
     let Ok(appointment) = sqlx::query_as!(
         Appointment,
         "
 UPDATE appointments
 SET accepted = $1
-WHERE id = $2
+WHERE id = $2 AND accepted IS NULL
 RETURNING *
         ",
         accepted,
@@ -151,7 +152,7 @@ WHERE id = $1
     let email = lettre::Message::builder()
         .from(gmail.from.parse()?)
         .to(user_email.parse()?)
-        .subject(if appointment.accepted {
+        .subject(if appointment.accepted == Some(true) {
             "Appointment Accepted"
         } else {
             "Appointment Denied"
@@ -163,7 +164,7 @@ Service: {}
 Notes: {}
             ",
             appointment.scheduled_at,
-            if appointment.accepted {
+            if appointment.accepted == Some(true) {
                 "accepted!"
             } else {
                 "denied."

@@ -15,7 +15,7 @@ CREATE TABLE appointments (
     scheduled_at TIMESTAMPTZ NOT NULL,
     services TEXT,
     notes TEXT,
-    accepted BOOLEAN NOT NULL DEFAULT false,
+    accepted BOOLEAN,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

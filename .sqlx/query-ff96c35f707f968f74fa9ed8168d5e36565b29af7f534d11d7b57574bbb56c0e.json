@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\nUPDATE appointments\nSET accepted = $1\nWHERE id = $2\nRETURNING *\n        ",
+  "query": "\nUPDATE appointments\nSET accepted = $1\nWHERE id = $2 AND accepted IS NULL\nRETURNING *\n        ",
   "describe": {
     "columns": [
       {
@@ -93,9 +93,9 @@
       false,
       true,
       true,
-      false,
+      true,
       false
     ]
   },
-  "hash": "220798e78d384643883da58033ad7b3e25a0178879edd1b9306a07718ea26e8b"
+  "hash": "ff96c35f707f968f74fa9ed8168d5e36565b29af7f534d11d7b57574bbb56c0e"
 }
