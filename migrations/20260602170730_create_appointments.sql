@@ -18,3 +18,11 @@ CREATE TABLE appointments (
     accepted BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Index for quick status lookups
+create index if not exists idx_appointments_status on appointments(accepted);
+
+-- Row Level Security (optional but recommended)
+-- The service role key bypasses RLS, so these only matter if you
+-- ever expose the anon key to the client.
+alter table appointments enable row level security;
