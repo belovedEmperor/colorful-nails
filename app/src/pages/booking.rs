@@ -148,7 +148,7 @@ pub fn Booking() -> impl IntoView {
 
 #[derive(serde::Serialize, serde::Deserialize, Clone)]
 #[cfg_attr(feature = "ssr", derive(sqlx::FromRow))]
-#[cfg_attr(not(feature = "ssr"), allow(dead_code))]
+#[cfg_attr(not(feature = "ssr"), expect(dead_code))]
 pub struct User {
     pub id: uuid::Uuid,
     pub first_name: String,

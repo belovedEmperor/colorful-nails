@@ -1,7 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Self-hosted Inter fallback (already in public/fonts/) ───────────── */
 @font-face {
   font-family: "Inter";
   font-weight: 100;
@@ -111,44 +114,412 @@
   src: url("/fonts/Inter_18pt-BlackItalic.ttf") format("truetype");
 }
 
+/* ── Keyframes (defined outside layers so they're globally scoped) ───── */
+@keyframes shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+@keyframes skeleton-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 @layer base {
   body {
-    @apply font-sans text-body;
+    @apply font-sans text-body text-midnight-ink bg-porcelain;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* Focus ring: brand-colored, only for keyboard nav */
+  :focus-visible {
+    outline: 2px solid #e8524a;
+    outline-offset: 2px;
+  }
+
+  /* Reduced-motion: kill ALL animations */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .btn-shimmer {
+      background: #e8524a !important;
+    }
   }
 }
 
 @layer components {
+  /* ── Layout ──────────────────────────────────────────────────────── */
   .page-container {
-    @apply container w-11/12 md:w-1/2 mx-auto;
+    @apply container px-4 max-w-7xl mx-auto;
   }
-
-  .page-header {
-    @apply text-title font-bold text-center text-ink;
-  }
-
-  .section-header {
-    @apply text-section font-bold;
-  }
-
-  .link {
-    @apply text-link underline hover:text-link-hover visited:text-link-visited hover:visited:text-link-visited-hover;
-  }
-
   .section-padding {
-    @apply py-8 md:py-16;
+    @apply py-10;
   }
   .section-container {
-    @apply gap-6;
+    @apply flex flex-col gap-6;
   }
 
-  .button {
-    @apply rounded-lg py-1 px-4;
+  /* ── Typography ──────────────────────────────────────────────────── */
+  .page-header {
+    @apply font-display text-title font-bold text-center text-midnight-ink;
+  }
+  .section-header {
+    @apply font-display text-section font-bold text-midnight-ink;
   }
 
-  .input-container {
-    @apply flex flex-col gap-1;
+  /* ── Links ───────────────────────────────────────────────────────── */
+  .link {
+    @apply text-teal-gel underline underline-offset-2 hover:text-teal-700 visited:text-violet-gloss;
   }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* BUTTONS                                                            */
+  /* ────────────────────────────────────────────────────────────────── */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-sans font-semibold rounded-lg
+           border border-transparent transition-all duration-150 cursor-pointer select-none;
+    -webkit-font-smoothing: antialiased;
+  }
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  }
+
+  /* Sizes */
+  .btn-sm {
+    @apply text-xs px-3 py-1.5;
+  }
+  .btn-md {
+    @apply text-sm px-4 py-2;
+  }
+  .btn-lg {
+    @apply text-base px-6 py-3;
+  }
+
+  /* Primary — coral-lacquer. THE booking action. */
+  .btn-primary {
+    @apply bg-coral-lacquer text-white;
+    box-shadow: 0 1px 3px rgba(232, 82, 74, 0.35);
+  }
+  .btn-primary:hover:not(:disabled) {
+    filter: brightness(1.08);
+    box-shadow: 0 2px 8px rgba(232, 82, 74, 0.45);
+  }
+  .btn-primary:active:not(:disabled) {
+    filter: brightness(0.95);
+    transform: translateY(1px);
+  }
+
+  /* Shimmer — Book Now only. One deliberate animation in the whole system. */
+  .btn-shimmer {
+    background: linear-gradient(90deg, #e8524a 0%, #f9b4d7 45%, #e8524a 100%);
+    background-size: 200% auto;
+    animation: shimmer 2.5s linear infinite;
+    box-shadow: 0 2px 8px rgba(232, 82, 74, 0.4);
+  }
+  .btn-shimmer:hover:not(:disabled) {
+    box-shadow: 0 4px 16px rgba(232, 82, 74, 0.5);
+  }
+
+  /* Secondary — violet-gloss. Services, browse actions. */
+  .btn-secondary {
+    @apply bg-violet-gloss text-white;
+    box-shadow: 0 1px 3px rgba(124, 58, 237, 0.3);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+  .btn-secondary:active:not(:disabled) {
+    filter: brightness(0.95);
+    transform: translateY(1px);
+  }
+
+  /* Ghost — transparent with border. Cancel, back actions. */
+  .btn-ghost {
+    @apply bg-transparent text-midnight-ink;
+    border-color: rgba(5, 3, 22, 0.2);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: rgba(5, 3, 22, 0.04);
+  }
+  .btn-ghost:focus-visible {
+    outline-color: #050316;
+  }
+
+  /* Danger — destructive actions. */
+  .btn-danger {
+    @apply bg-red-600 text-white;
+  }
+  .btn-danger:hover:not(:disabled) {
+    @apply bg-red-700;
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* CARDS / SURFACES                                                   */
+  /* ────────────────────────────────────────────────────────────────── */
+
+  /* Base card: border AND shadow together — never one without the other */
+  .card {
+    @apply bg-white rounded-xl p-6;
+    border: 1px solid rgba(5, 3, 22, 0.08);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Tinted surface cards — one per palette accent */
+  .card-blush {
+    background-color: #f5e4ef;
+    border-color: rgba(249, 180, 215, 0.5);
+  }
+  .card-mint {
+    background-color: #edfaf0;
+    border-color: rgba(220, 249, 224, 0.8);
+  }
+  .card-champagne {
+    background-color: #fafff0;
+    border-color: rgba(246, 255, 219, 0.8);
+  }
+  .card-violet {
+    background-color: #f5f0ff;
+    border-color: rgba(124, 58, 237, 0.12);
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* BADGES                                                             */
+  /* ────────────────────────────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold font-sans;
+  }
+  .badge-coral {
+    @apply text-white;
+    background-color: #e8524a;
+  }
+  .badge-violet {
+    @apply text-white;
+    background-color: #7c3aed;
+  }
+  .badge-gold {
+    @apply text-amber-900;
+    background-color: #fef3c7;
+  }
+  .badge-teal {
+    @apply text-white;
+    background-color: #0891b2;
+  }
+  .badge-blush {
+    @apply text-midnight-ink;
+    background-color: #f9b4d7;
+  }
+  .badge-mint {
+    @apply text-green-800;
+    background-color: #dcf9e0;
+  }
+  .badge-outline {
+    @apply text-midnight-ink bg-transparent;
+    border: 1px solid rgba(5, 3, 22, 0.2);
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* ALERTS                                                             */
+  /* ────────────────────────────────────────────────────────────────── */
+  .alert {
+    @apply rounded-xl p-4 flex gap-3 items-start font-sans text-sm;
+    border: 1px solid;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+  .alert-icon {
+    @apply shrink-0 mt-0.5 text-base leading-none;
+  }
+  .alert-title {
+    @apply font-semibold text-sm mb-0.5;
+  }
+  .alert-body {
+    @apply text-sm opacity-80;
+  }
+  .alert-success {
+    background-color: #edfaf0;
+    border-color: rgba(22, 163, 74, 0.25);
+    color: #166534;
+  }
+  .alert-error {
+    background-color: #fff1f0;
+    border-color: rgba(232, 82, 74, 0.3);
+    color: #991b1b;
+  }
+  .alert-warning {
+    background-color: #fffbeb;
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #92400e;
+  }
+  .alert-info {
+    background-color: #f0f9ff;
+    border-color: rgba(8, 145, 178, 0.25);
+    color: #0e7490;
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* FORM INPUTS                                                        */
+  /* ────────────────────────────────────────────────────────────────── */
   .input {
-    @apply p-1 border h-8;
+    @apply block w-full rounded-lg px-3 py-2 text-sm text-midnight-ink font-sans;
+    background-color: #ffffff;
+    border: 1px solid rgba(5, 3, 22, 0.2);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+  .input:focus {
+    @apply outline-none;
+    border-color: #e8524a;
+    box-shadow:
+      0 0 0 3px rgba(232, 82, 74, 0.15),
+      inset 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+  .input:disabled {
+    @apply opacity-50 cursor-not-allowed;
+    background-color: rgba(5, 3, 22, 0.04);
+  }
+  .input-error {
+    border-color: #e8524a;
+  }
+  .input-label {
+    @apply block text-xs font-semibold text-midnight-ink mb-1 font-sans;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .input-hint {
+    @apply text-xs mt-1 font-sans;
+    color: rgba(5, 3, 22, 0.5);
+  }
+  .input-error-text {
+    @apply text-xs mt-1 font-sans text-coral-lacquer;
+  }
+  .input-container {
+    @apply flex flex-col;
+  }
+
+  /* Toggle */
+  .toggle-track {
+    @apply relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 cursor-pointer;
+    background-color: rgba(5, 3, 22, 0.15);
+  }
+  .toggle-track[data-checked="true"] {
+    background-color: #e8524a;
+  }
+  .toggle-thumb {
+    @apply absolute left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200;
+  }
+  .toggle-thumb[data-checked="true"] {
+    transform: translateX(1.25rem);
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* SKELETONS                                                          */
+  /* Shaped like actual content — not generic gray rectangles.         */
+  /* ────────────────────────────────────────────────────────────────── */
+  .skeleton {
+    @apply rounded;
+    background: linear-gradient(90deg, #f0eef5 25%, #e8e4f0 50%, #f0eef5 75%);
+    background-size: 200% 100%;
+    animation: skeleton-sweep 1.5s ease-in-out infinite;
+  }
+
+  /* Text line skeletons */
+  .skeleton-line {
+    @apply skeleton h-4 w-full rounded;
+  }
+  .skeleton-line-sm {
+    @apply skeleton h-4 w-1/2 rounded;
+  }
+  .skeleton-line-xs {
+    @apply skeleton h-3 w-1/4 rounded;
+  }
+  .skeleton-heading {
+    @apply skeleton h-7 w-2/3 rounded;
+  }
+  .skeleton-label {
+    @apply skeleton h-3 w-20 rounded;
+  }
+
+  /* Booking card skeleton — matches BookingCard shape */
+  .skeleton-booking-card {
+    @apply card flex flex-col gap-4;
+  }
+
+  /* Service row skeleton — matches service list item */
+  .skeleton-service-row {
+    @apply flex items-center gap-4 py-3;
+    border-bottom: 1px solid rgba(5, 3, 22, 0.06);
+  }
+  .skeleton-service-icon {
+    @apply skeleton w-10 h-10 rounded-lg shrink-0;
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* SWATCH STRIP (signature divider)                                   */
+  /* ────────────────────────────────────────────────────────────────── */
+  .swatch-strip {
+    @apply flex items-center gap-3 my-10;
+  }
+  .swatch-strip-rule {
+    @apply h-px flex-1;
+    background: rgba(5, 3, 22, 0.1);
+  }
+  .swatch-strip-dots {
+    @apply flex items-center gap-2;
+  }
+  .swatch-dot {
+    @apply w-4 h-4 rounded-full inline-block;
+  }
+
+  /* ────────────────────────────────────────────────────────────────── */
+  /* TABLE                                                              */
+  /* ────────────────────────────────────────────────────────────────── */
+  .hours-table {
+    @apply w-full font-sans text-sm;
+    border-collapse: collapse;
+  }
+  .hours-table td {
+    @apply py-1.5;
+  }
+  .hours-table td:first-child {
+    @apply font-medium pr-6 text-midnight-ink;
+  }
+  .hours-table td:last-child {
+    @apply tabular-nums text-midnight-ink/70;
+  }
+  .hours-table tr:not(:last-child) td {
+    border-bottom: 1px solid rgba(5, 3, 22, 0.06);
   }
 }

@@ -30,6 +30,7 @@ mod pages;
 
 // Top-Level pages
 use crate::pages::booking::Booking;
+use crate::pages::design::Design;
 use crate::pages::home::Home;
 use crate::pages::services::Services;
 
@@ -61,6 +62,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/") view=Home />
                 <Route path=path!("/services") view=Services />
                 <Route path=path!("/booking") view=Booking />
+                <Route path=path!("/design") view=Design />
             </Routes>
         </Router>
 
