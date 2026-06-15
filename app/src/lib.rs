@@ -36,7 +36,7 @@ use crate::pages::services::Services;
 
 // Components
 use crate::components::footer::Footer;
-pub use crate::components::header::Header;
+use crate::components::header::Header;
 
 /// Structs
 #[cfg(feature = "ssr")]
