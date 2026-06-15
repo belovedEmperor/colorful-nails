@@ -65,7 +65,11 @@ async fn main() {
         .await
         .expect("Failed to connect to database");
 
-    let configuration = get_configuration(None).expect("Leptos configuration should exist");
+    let mut configuration = get_configuration(None).expect("Leptos configuration should exist");
+    if let Ok(port) = std::env::var("PORT") {
+        let port: u16 = port.parse().expect("PORT must be a number");
+        configuration.leptos_options.site_addr = std::net::SocketAddr::from(([0, 0, 0, 0], port));
+    }
     let address = configuration.leptos_options.site_addr;
     let leptos_options = configuration.leptos_options;
     // Generate the list of routes in your Leptos App
