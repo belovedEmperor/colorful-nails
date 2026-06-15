@@ -27,8 +27,7 @@ pub fn Footer() -> impl IntoView {
                         </span>
                     </a>
                     <p class="font-sans text-sm text-white/50 max-w-[18rem]">
-                        "Family-owned nail salon in Hazleton, PA. "
-                        "Open since 2011 and still going strong."
+                        "Family-owned nail salon in Hazleton, PA. " "Open since 2011 and counting."
                     </p>
                     <a href="/booking" class="btn btn-primary btn-md btn-shimmer w-fit">
                         "Book Now"
@@ -110,9 +109,7 @@ pub fn Footer() -> impl IntoView {
                     <p class="font-sans text-xs text-white/30">
                         "© 2026 Colorful Nails & Spa · Hazleton, PA"
                     </p>
-                    <p class="font-sans text-xs text-white/20">
-                        "Walk-ins welcome"
-                    </p>
+                    <p class="font-sans text-xs text-white/20">"Walk-ins welcome"</p>
                 </div>
             </div>
 
