@@ -1,7 +1,7 @@
 FROM rust:stable-alpine as builder
 
 RUN apk update && \
-   apk add --no-cache bash curl npm libc-dev binaryen pkgconfig openssl-dev
+   apk add --no-cache bash curl npm libc-dev binaryen pkgconf openssl-dev
 
 RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/leptos-rs/cargo-leptos/releases/latest/download/cargo-leptos-installer.sh | sh
 
