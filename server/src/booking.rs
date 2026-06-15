@@ -59,6 +59,18 @@ pub async fn telegram_webhook(
         _ => return StatusCode::OK,
     };
 
+    client
+        .post(format!(
+            "https://api.telegram.org/bot{}/answerCallbackQuery",
+            telegram.token,
+        ))
+        .json(&json!({
+            "callback_query_id": callback_query.id
+        }))
+        .send()
+        .await
+        .ok();
+
     let Ok(appointment) = sqlx::query_as!(
         Appointment,
         "
@@ -76,7 +88,7 @@ RETURNING *
         return StatusCode::OK;
     };
 
-    // Removes buttons from text
+    // Remove buttons from message
     client
         .post(format!(
             "https://api.telegram.org/bot{}/editMessageReplyMarkup",
@@ -99,18 +111,6 @@ RETURNING *
         .json(&json!({
             "chat_id": callback_query.message.as_ref().map(|message| message.chat.id),
             "text": if accepted { "✅ Appointment confirmed." } else { "❌ Appointment denied." }
-        }))
-        .send()
-        .await
-        .ok();
-
-    client
-        .post(format!(
-            "https://api.telegram.org/bot{}/answerCallbackQuery",
-            telegram.token,
-        ))
-        .json(&json!({
-            "callback_query_id": callback_query.id
         }))
         .send()
         .await
