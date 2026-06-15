@@ -1,6 +1,5 @@
 use app::{Appointment, Telegram};
 use axum::{Json, extract::State};
-use lettre::{AsyncSmtpTransport, AsyncTransport as _, Tokio1Executor};
 use reqwest::StatusCode;
 use serde::Deserialize;
 use serde_json::json;
@@ -34,8 +33,7 @@ pub async fn telegram_webhook(
     State(db): State<PgPool>,
     State(client): State<reqwest::Client>,
     State(telegram): State<Telegram>,
-    State(gmail): State<Gmail>,
-    State(mailer): State<AsyncSmtpTransport<Tokio1Executor>>,
+    State(resend_api_key): State<String>,
     Json(update): Json<TelegramUpdate>,
 ) -> StatusCode {
     let Some(callback_query) = update.callback_query else {
@@ -117,28 +115,24 @@ RETURNING *
         .await
         .ok();
 
-    email_customer(gmail, db, appointment, mailer).await.ok();
+    email_customer(client, resend_api_key, db, appointment)
+        .await
+        .ok();
 
     StatusCode::OK
 }
 
-#[derive(Clone)]
-pub struct Gmail {
-    pub from: String,
-    pub app_password: String,
-}
-
-/// Send accept/deny email to customer via Gmail SMTP
+/// Send accept/deny email to customer via Resend
 ///
 /// # Errors
 /// Returns `Err` if db fails to fetch user email or email fails to send
 pub async fn email_customer(
-    gmail: Gmail,
+    client: reqwest::Client,
+    resend_api_key: String,
     db: PgPool,
     appointment: Appointment,
-    mailer: AsyncSmtpTransport<Tokio1Executor>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let user_email = query!(
+    let user_email: String = query!(
         "
 SELECT email FROM users
 WHERE id = $1
@@ -149,31 +143,38 @@ WHERE id = $1
     .await?
     .email;
 
-    let email = lettre::Message::builder()
-        .from(gmail.from.parse()?)
-        .to(user_email.parse()?)
-        .subject(if appointment.accepted == Some(true) {
-            "Appointment Accepted"
-        } else {
-            "Appointment Denied"
-        })
-        .body(format!(
-            "
+    let appointment_status = if appointment.accepted == Some(true) {
+        "Appointment Accepted - Colorful Nails & Spa"
+    } else {
+        "Appointment Denied - Colorful Nails & Spa"
+    };
+    let email_body = format!(
+        "
 Your appointment at {} has been {}
 Service: {}
 Notes: {}
-            ",
-            appointment.scheduled_at,
-            if appointment.accepted == Some(true) {
-                "accepted!"
-            } else {
-                "denied."
-            },
-            appointment.services.unwrap_or_default(),
-            appointment.notes.unwrap_or_default()
-        ))?;
+        ",
+        appointment.scheduled_at,
+        if appointment.accepted == Some(true) {
+            "accepted!"
+        } else {
+            "denied."
+        },
+        appointment.services.unwrap_or_default(),
+        appointment.notes.unwrap_or_default()
+    );
 
-    mailer.send(email).await?;
+    client
+        .post("https://api.resend.com/emails")
+        .bearer_auth(&resend_api_key)
+        .json(&json!({
+            "from": "Colorful Nails & Spa <onboarding@resend.dev>",
+            "to": [user_email],
+            "subject": appointment_status,
+            "text": email_body
+        }))
+        .send()
+        .await?;
 
     Ok(())
 }

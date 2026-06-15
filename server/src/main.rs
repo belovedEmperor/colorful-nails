@@ -7,10 +7,9 @@ use leptos::{
     prelude::provide_context,
 };
 use leptos_axum::{LeptosRoutes as _, generate_route_list};
-use lettre::{AsyncSmtpTransport, Tokio1Executor, transport::smtp::authentication::Credentials};
 use sqlx::PgPool;
 
-use crate::booking::{Gmail, telegram_webhook};
+use crate::booking::telegram_webhook;
 
 mod booking;
 
@@ -20,8 +19,7 @@ struct AppState {
     db: PgPool,
     client: reqwest::Client,
     telegram: Telegram,
-    gmail: Gmail,
-    mailer: AsyncSmtpTransport<Tokio1Executor>,
+    resend_api_key: String,
 }
 
 impl FromRef<AppState> for LeptosOptions {
@@ -44,14 +42,9 @@ impl FromRef<AppState> for Telegram {
         state.telegram.clone()
     }
 }
-impl FromRef<AppState> for Gmail {
+impl FromRef<AppState> for String {
     fn from_ref(state: &AppState) -> Self {
-        state.gmail.clone()
-    }
-}
-impl FromRef<AppState> for AsyncSmtpTransport<Tokio1Executor> {
-    fn from_ref(state: &AppState) -> Self {
-        state.mailer.clone()
+        state.resend_api_key.clone()
     }
 }
 
@@ -80,26 +73,14 @@ async fn main() {
         chat_id: std::env::var("TELEGRAM_CHAT_ID").expect("TELEGRAM_CHAT_ID must be set"),
     };
 
-    let gmail = Gmail {
-        from: std::env::var("GMAIL_FROM").expect("GMAIL_FROM must be set"),
-        app_password: std::env::var("GMAIL_APP_PASSWORD").expect("GMAIL_APP_PASSWORD must be set"),
-    };
-
-    let credentials = Credentials::new(gmail.clone().from, gmail.clone().app_password);
-
-    let mailer: AsyncSmtpTransport<Tokio1Executor> =
-        AsyncSmtpTransport::<Tokio1Executor>::relay("smtp.gmail.com")
-            .expect("Gmail smtp should be available")
-            .credentials(credentials)
-            .build();
+    let resend_api_key = std::env::var("RESEND_API_KEY").expect("RESEND_API_KEY");
 
     let state = AppState {
         leptos_options,
         db: pool,
         client: reqwest::Client::new(),
         telegram,
-        gmail,
-        mailer,
+        resend_api_key,
     };
 
     let app = Router::new()
