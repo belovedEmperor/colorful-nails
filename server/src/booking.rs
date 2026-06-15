@@ -217,7 +217,7 @@ WHERE id = $1
         <!-- Footer -->
         <tr>
           <td style="background:#fdf2f8;padding:20px 32px;text-align:center;border-top:1px solid #fce7f3;">
-            <p style="margin:0;color:#9d174d;font-size:13px;">Questions? Give us a call — we&#39;d love to hear from you.</p>
+            <p style="margin:0;color:#9d174d;font-size:13px;">Questions? Give us a call - (570) 455-2799.</p>
             <p style="margin:6px 0 0;color:#be185d;font-size:12px;">Colorful Nails &amp; Spa &middot; Hazleton, PA</p>
           </td>
         </tr>
