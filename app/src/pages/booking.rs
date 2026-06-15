@@ -292,8 +292,6 @@ pub fn Booking() -> impl IntoView {
                 </div>
             </section>
 
-            <SwatchStrip />
-
         </ErrorBoundary>
     }
 }
