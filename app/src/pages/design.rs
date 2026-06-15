@@ -252,7 +252,7 @@ pub fn Design() -> impl IntoView {
                     <Button size="lg">"Large"</Button>
                 </Row>
                 <Row label="Shimmer — Book Now CTA only">
-                    <Button shimmer=true size="lg">"Book Now"</Button>
+                    <Button size="lg">"Book Now"</Button>
                 </Row>
                 <Row label="Disabled">
                     <Button disabled=true>"Primary"</Button>
@@ -465,7 +465,7 @@ pub fn Design() -> impl IntoView {
                             input_type="datetime-local"
                             name="appointment_time"
                         />
-                        <Button shimmer=true btn_type="submit" size="lg" class="w-full">
+                        <Button btn_type="submit" size="lg" class="w-full">
                             "Book Now"
                         </Button>
                     </Card>
@@ -535,7 +535,7 @@ pub fn Design() -> impl IntoView {
                             "One animation in the whole system"
                         </p>
                         <p class="font-sans text-sm text-midnight-ink/70">
-                            "The shimmer sweep lives only on the Book Now button. Everything else is static. Restraint is what makes it land."
+                            "The Book Now button is the primary CTA. Everything else is static. Restraint is what makes it land."
                         </p>
                     </Card>
                     <Card tint="champagne" class="flex flex-col gap-2">

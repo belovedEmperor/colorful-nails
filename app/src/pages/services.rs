@@ -232,7 +232,7 @@ pub fn Services() -> impl IntoView {
                             "Walk-ins welcome. Appointments get priority."
                         </p>
                     </div>
-                    <a href="/booking" class="btn btn-primary btn-lg btn-shimmer shrink-0">
+                    <a href="/booking" class="btn btn-primary btn-lg shrink-0">
                         "Book Now"
                     </a>
                 </div>

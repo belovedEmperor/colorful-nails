@@ -202,7 +202,7 @@ pub fn Booking() -> impl IntoView {
 
                                 // Submit
                                 <button
-                                    class="btn btn-primary btn-lg btn-shimmer col-span-2 w-full"
+                                    class="btn btn-primary btn-lg col-span-2 w-full"
                                     type="submit"
                                     disabled=move || action.pending().get()
                                 >

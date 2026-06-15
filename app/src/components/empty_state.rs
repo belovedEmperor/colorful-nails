@@ -45,7 +45,7 @@ pub fn EmptyState(
             </p>
             <a
                 href=action_href
-                class="btn btn-primary btn-md btn-shimmer mt-2"
+                class="btn btn-primary btn-md mt-2"
             >
                 {action_label}
             </a>

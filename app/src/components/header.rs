@@ -2,7 +2,7 @@ use leptos::prelude::*;
 
 use crate::components::nail_bottle::NailBottle;
 
-/// Top navigation header — sticky, white, with shimmer Book Now CTA.
+/// Top navigation header — sticky, white, with Book Now CTA.
 #[component]
 pub fn Header() -> impl IntoView {
     let menu_open = RwSignal::new(false);
@@ -150,7 +150,7 @@ pub fn Header() -> impl IntoView {
                     </a>
                     <a
                         href="/booking"
-                        class="btn btn-primary btn-lg btn-shimmer w-full justify-center mt-3"
+                        class="btn btn-primary btn-lg w-full justify-center mt-3"
                         on:click=move |_| menu_open.set(false)
                     >
                         "Book Now"

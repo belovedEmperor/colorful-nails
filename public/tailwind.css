@@ -114,15 +114,6 @@
   src: url("/fonts/Inter_18pt-BlackItalic.ttf") format("truetype");
 }
 
-/* ── Keyframes (defined outside layers so they're globally scoped) ───── */
-@keyframes shimmer {
-  0% {
-    background-position: 200% center;
-  }
-  100% {
-    background-position: -200% center;
-  }
-}
 @keyframes skeleton-sweep {
   0% {
     background-position: 200% 0;
@@ -169,9 +160,6 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
-    }
-    .btn-shimmer {
-      background: #e8524a !important;
     }
   }
 }
@@ -238,16 +226,6 @@
     transform: translateY(1px);
   }
 
-  /* Shimmer — Book Now only. One deliberate animation in the whole system. */
-  .btn-shimmer {
-    background: linear-gradient(90deg, #e8524a 0%, #f9b4d7 45%, #e8524a 100%);
-    background-size: 200% auto;
-    animation: shimmer 2.5s linear infinite;
-    box-shadow: 0 2px 8px rgba(232, 82, 74, 0.4);
-  }
-  .btn-shimmer:hover:not(:disabled) {
-    box-shadow: 0 4px 16px rgba(232, 82, 74, 0.5);
-  }
 
   /* Secondary — violet-gloss. Services, browse actions. */
   .btn-secondary {
