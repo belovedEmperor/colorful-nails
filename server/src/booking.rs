@@ -143,25 +143,90 @@ WHERE id = $1
     .await?
     .email;
 
-    let appointment_status = if appointment.accepted == Some(true) {
-        "Appointment Accepted - Colorful Nails & Spa"
+    let accepted = appointment.accepted == Some(true);
+    let subject = if accepted {
+        "Your Appointment is Confirmed ✅ - Colorful Nails & Spa"
     } else {
-        "Appointment Denied - Colorful Nails & Spa"
+        "Appointment Update ❌ - Colorful Nails & Spa"
     };
-    let email_body = format!(
-        "
-Your appointment at {} has been {}
-Service: {}
-Notes: {}
-        ",
-        appointment.scheduled_at,
-        if appointment.accepted == Some(true) {
-            "accepted!"
-        } else {
-            "denied."
-        },
-        appointment.services.unwrap_or_default(),
-        appointment.notes.unwrap_or_default()
+    let status_color = if accepted { "#16a34a" } else { "#dc2626" };
+    let status_label = if accepted {
+        "Confirmed ✅"
+    } else {
+        "Denied ❌"
+    };
+    let status_verb = if accepted { "accepted" } else { "denied" };
+    let scheduled_at = appointment.scheduled_at.to_string();
+    let services = appointment.services.clone().unwrap_or_default();
+    let notes = appointment.notes.clone().unwrap_or_default();
+
+    let html_body = format!(
+        r#"<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#fdf2f8;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#fdf2f8;padding:40px 0;">
+    <tr><td align="center">
+      <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+
+        <!-- Header -->
+        <tr>
+          <td style="background:#db2777;padding:36px 32px;text-align:center;">
+            <p style="margin:0 0 4px;color:#fce7f3;font-size:13px;letter-spacing:2px;text-transform:uppercase;">Colorful Nails &amp; Spa</p>
+            <h1 style="margin:0;color:#ffffff;font-size:26px;font-weight:700;">Appointment Update</h1>
+          </td>
+        </tr>
+
+        <!-- Status badge -->
+        <tr>
+          <td style="padding:36px 32px 24px;text-align:center;">
+            <span style="display:inline-block;background:{status_color};color:#ffffff;padding:10px 32px;border-radius:999px;font-size:17px;font-weight:700;letter-spacing:0.5px;">{status_label}</span>
+            <p style="margin:18px 0 0;color:#374151;font-size:15px;">Your appointment has been <strong>{status_verb}</strong>.</p>
+          </td>
+        </tr>
+
+        <!-- Details card -->
+        <tr>
+          <td style="padding:0 32px 36px;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#fdf2f8;border-radius:10px;">
+              <tr><td style="padding:24px;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="padding:8px 0;border-bottom:1px solid #fce7f3;">
+                      <p style="margin:0;font-size:11px;color:#9d174d;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Date &amp; Time</p>
+                      <p style="margin:4px 0 0;font-size:14px;color:#1f2937;">{scheduled_at}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;border-bottom:1px solid #fce7f3;">
+                      <p style="margin:0;font-size:11px;color:#9d174d;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Services</p>
+                      <p style="margin:4px 0 0;font-size:14px;color:#1f2937;">{services}</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;">
+                      <p style="margin:0;font-size:11px;color:#9d174d;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Notes</p>
+                      <p style="margin:4px 0 0;font-size:14px;color:#1f2937;">{notes}</p>
+                    </td>
+                  </tr>
+                </table>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td style="background:#fdf2f8;padding:20px 32px;text-align:center;border-top:1px solid #fce7f3;">
+            <p style="margin:0;color:#9d174d;font-size:13px;">Questions? Give us a call — we&#39;d love to hear from you.</p>
+            <p style="margin:6px 0 0;color:#be185d;font-size:12px;">Colorful Nails &amp; Spa &middot; Hazleton, PA</p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>"#,
     );
 
     client
@@ -170,8 +235,8 @@ Notes: {}
         .json(&json!({
             "from": "Colorful Nails & Spa <onboarding@resend.dev>",
             "to": [user_email],
-            "subject": appointment_status,
-            "text": email_body
+            "subject": subject,
+            "html": html_body
         }))
         .send()
         .await?;
