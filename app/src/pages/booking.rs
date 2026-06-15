@@ -1,6 +1,8 @@
-use crate::{components::errors::ErrorView, pages::services::SERVICE_CATEGORIES};
+use crate::{
+    components::{alert::Alert, card::Card, errors::ErrorView, swatch_strip::SwatchStrip},
+    pages::services::SERVICE_CATEGORIES,
+};
 use leptos::prelude::*;
-
 #[component]
 pub fn Booking() -> impl IntoView {
     let action = ServerAction::<CreateAppointment>::new();
@@ -10,138 +12,289 @@ pub fn Booking() -> impl IntoView {
         <ErrorBoundary fallback=|errors| {
             view! { <ErrorView errors=errors /> }
         }>
-            <div class="flex flex-col page-container section-padding section-container">
-                <h1 class="page-header">"Booking"</h1>
 
-                <ActionForm action=action>
-                    <div class="grid grid-cols-2 gap-8 justify-between">
-                        <div class="input-container">
-                            <label for="first_name">"First Name:*"</label>
-                            <input
-                                class="input shadow"
-                                type="text"
-                                placeholder="Jane"
-                                id="first_name"
-                                name="first_name"
-                                required
-                            />
-                        </div>
-                        <div class="input-container">
-                            <label for="last_name">"Last Name:"</label>
-                            <input
-                                class="input shadow"
-                                type="text"
-                                placeholder="Doe"
-                                id="last_name"
-                                name="last_name"
-                            />
-                        </div>
-
-                        <div class="input-container">
-                            <label for="phone">"Phone Number:*"</label>
-                            <input
-                                class="input shadow"
-                                type="tel"
-                                placeholder="(570) 455-2799"
-                                id="phone"
-                                name="phone"
-                                pattern="\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}"
-                                required
-                                on:input:target=move |event| {
-                                    set_phone_number
-                                        .set(format_phone_number(&event.target().value()));
-                                }
-                                prop:value=phone_number
-                            />
-                        </div>
-
-                        <div class="input-container">
-                            <label for="email">"Email:*"</label>
-                            <input
-                                class="input shadow"
-                                type="email"
-                                placeholder="example@example.com"
-                                id="email"
-                                name="email"
-                                required
-                            />
-                        </div>
-
-                        <div class="input-container">
-                            <label for="services">"Services:"</label>
-                            <select class="input shadow" name="services" id="services">
-                                <option value="">Choose a service</option>
-                                {SERVICE_CATEGORIES
-                                    .iter()
-                                    .map(|service_category| {
-                                        view! {
-                                            <hr />
-                                            <optgroup label=service_category
-                                                .name>
-                                                {service_category
-                                                    .services
-                                                    .iter()
-                                                    .map(|service| {
-                                                        let value = service.to_lowercase().replace(' ', "");
-                                                        view! { <option value=value>{*service}</option> }
-                                                    })
-                                                    .collect_view()}
-                                            </optgroup>
-                                        }
-                                    })
-                                    .collect_view()}
-                            </select>
-                        </div>
-
-                        <div class="input-container">
-                            <label for="scheduled_at">"Preferred Date:*"</label>
-                            <input
-                                class="input shadow"
-                                type="datetime-local"
-                                id="scheduled_at"
-                                name="scheduled_at"
-                                required
-                            />
-                        </div>
-
-                        <div class="input-container col-span-2">
-                            <label for="notes">"Notes:"</label>
-                            <textarea class="input h-16 shadow" id="notes" name="notes" rows="5" />
-                        </div>
-
-                        {move || {
-                            if action.pending().get() {
-                                view! { <p>"Submitting..."</p> }.into_any()
-                            } else {
-                                match action.value().get() {
-                                    None => view! { <p></p> }.into_any(),
-                                    Some(Ok(appointment)) => {
-                                        view! {
-                                            <p>
-                                                "Booked! ID: " {appointment.id.to_string()} <br />
-                                                "We will email you about the status of the appointment soon."
-                                            </p>
-                                        }
-                                            .into_any()
-                                    }
-                                    Some(Err(error)) => {
-
-                                        view! { <p>"Error: " {error.to_string()}</p> }
-                                            .into_any()
-                                    }
-                                }
-                            }
-                        }}
-
-                        <input
-                            class="button bg-primary col-start-1 col-span-2 w-fit mx-auto"
-                            type="submit"
-                            value="Submit"
-                            disabled=move || action.pending().get()
-                        />
-                    </div>
-                </ActionForm>
+            // ── Hero ──────────────────────────────────────────────────
+            <div class="bg-midnight-ink text-white py-16">
+                <div class="page-container flex flex-col gap-3">
+                    <p class="text-xs font-sans font-semibold tracking-widest uppercase text-white/40">
+                        "Colorful Nails & Spa · Hazleton, PA"
+                    </p>
+                    <h1 class="font-display text-title font-bold text-white">
+                        "Book an Appointment"
+                    </h1>
+                    <p class="font-sans text-sm text-white/60 max-w-sm">
+                        "Fill out the form and we’ll confirm your appointment as soon as possible."
+                    </p>
+                </div>
             </div>
+
+            <SwatchStrip />
+
+            // ── Form + sidebar ────────────────────────────────────────────
+            <section class="section-padding">
+                <div class="page-container grid md:grid-cols-[1.5fr_1fr] gap-6 items-start">
+
+                    // ── Form card ──────────────────────────────────
+                    <Card class="flex flex-col gap-6">
+                        <h2 class="font-display text-xl font-bold text-midnight-ink">
+                            "Your details"
+                        </h2>
+
+                        <ActionForm action=action>
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-5">
+
+                                <div class="input-container">
+                                    <label class="input-label" for="first_name">
+                                        "First Name "
+                                        <span class="text-coral-lacquer">"*"</span>
+                                    </label>
+                                    <input
+                                        class="input shadow"
+                                        type="text"
+                                        placeholder="Jane"
+                                        id="first_name"
+                                        name="first_name"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="input-container">
+                                    <label class="input-label" for="last_name">
+                                        "Last Name"
+                                    </label>
+                                    <input
+                                        class="input shadow"
+                                        type="text"
+                                        placeholder="Doe"
+                                        id="last_name"
+                                        name="last_name"
+                                    />
+                                </div>
+
+                                <div class="input-container">
+                                    <label class="input-label" for="phone">
+                                        "Phone "
+                                        <span class="text-coral-lacquer">"*"</span>
+                                    </label>
+                                    <input
+                                        class="input shadow"
+                                        type="tel"
+                                        placeholder="(570) 455-2799"
+                                        id="phone"
+                                        name="phone"
+                                        pattern="\\([0-9]{3}\\) [0-9]{3}-[0-9]{4}"
+                                        required
+                                        on:input:target=move |event| {
+                                            set_phone_number
+                                                .set(format_phone_number(&event.target().value()));
+                                        }
+                                        prop:value=phone_number
+                                    />
+                                </div>
+
+                                <div class="input-container">
+                                    <label class="input-label" for="email">
+                                        "Email "
+                                        <span class="text-coral-lacquer">"*"</span>
+                                    </label>
+                                    <input
+                                        class="input shadow"
+                                        type="email"
+                                        placeholder="jane@example.com"
+                                        id="email"
+                                        name="email"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="input-container">
+                                    <label class="input-label" for="services">
+                                        "Service"
+                                    </label>
+                                    <select class="input shadow" name="services" id="services">
+                                        <option value="">"Choose a service"</option>
+                                        {SERVICE_CATEGORIES
+                                            .iter()
+                                            .map(|service_category| {
+                                                view! {
+                                                    <hr />
+                                                    <optgroup label=service_category
+                                                        .name>
+                                                        {service_category
+                                                            .services
+                                                            .iter()
+                                                            .map(|service| {
+                                                                let value = service.to_lowercase().replace(' ', "");
+                                                                view! { <option value=value>{*service}</option> }
+                                                            })
+                                                            .collect_view()}
+                                                    </optgroup>
+                                                }
+                                            })
+                                            .collect_view()}
+                                    </select>
+                                </div>
+
+                                <div class="input-container">
+                                    <label class="input-label" for="scheduled_at">
+                                        "Preferred Date "
+                                        <span class="text-coral-lacquer">"*"</span>
+                                    </label>
+                                    <input
+                                        class="input shadow"
+                                        type="datetime-local"
+                                        id="scheduled_at"
+                                        name="scheduled_at"
+                                        required
+                                    />
+                                </div>
+
+                                <div class="input-container col-span-2">
+                                    <label class="input-label" for="notes">
+                                        "Notes"
+                                    </label>
+                                    <textarea
+                                        class="input h-24 shadow"
+                                        id="notes"
+                                        name="notes"
+                                        rows="4"
+                                        placeholder="Anything we should know? Design ideas, allergies, etc."
+                                    />
+                                </div>
+
+                                // Status message
+                                <div class="col-span-2">
+                                    {move || {
+                                        if action.pending().get() {
+                                            view! {
+                                                <Alert variant="info">"Submitting your request…"</Alert>
+                                            }
+                                                .into_any()
+                                        } else {
+                                            match action.value().get() {
+                                                None => view! { <div /> }.into_any(),
+                                                Some(Ok(appointment)) => {
+                                                    view! {
+                                                        <Alert variant="success" title="Request received!">
+                                                            "Booking ID: "
+                                                            {appointment.id.to_string()}
+                                                            ". We’ll email you to confirm shortly."
+                                                        </Alert>
+                                                    }
+                                                        .into_any()
+                                                }
+                                                Some(Err(error)) => {
+                                                    view! {
+                                                        <Alert variant="error" title="Something went wrong">
+                                                            {error.to_string()}
+                                                            " Try again or call "
+                                                            <a class="link" href="tel:+15704552799">
+                                                                "(570) 455-2799"
+                                                            </a>
+                                                            "."
+                                                        </Alert>
+                                                    }
+                                                        .into_any()
+                                                }
+                                            }
+                                        }
+                                    }}
+                                </div>
+
+                                // Submit
+                                <button
+                                    class="btn btn-primary btn-lg btn-shimmer col-span-2 w-full"
+                                    type="submit"
+                                    disabled=move || action.pending().get()
+                                >
+                                    "Book Now"
+                                </button>
+
+                            </div>
+                        </ActionForm>
+                    </Card>
+
+                    // ── Sidebar ─────────────────────────────────────
+                    <div class="flex flex-col gap-4 md:sticky md:top-24">
+
+                        <Card tint="blush" class="flex flex-col gap-4">
+                            <h3 class="font-display text-base font-bold text-midnight-ink">
+                                "Contact us directly"
+                            </h3>
+                            <div class="flex flex-col gap-2 font-sans text-sm text-midnight-ink/70">
+                                <a
+                                    href="tel:+15704552799"
+                                    class="flex items-center gap-2 hover:text-coral-lacquer transition-colors"
+                                >
+                                    <span class="text-base">"☎️"</span>
+                                    "(570) 455-2799"
+                                </a>
+                                <a
+                                    rel="external"
+                                    href="https://maps.app.goo.gl/ZxRttxppY3V1qUxm8"
+                                    class="flex items-start gap-2 hover:text-coral-lacquer transition-colors"
+                                >
+                                    <span class="text-base mt-px">"📍"</span>
+                                    "546 W Broad St, Hazleton, PA 18201"
+                                </a>
+                            </div>
+                        </Card>
+
+                        <Card tint="champagne" class="flex flex-col gap-4">
+                            <h3 class="font-display text-base font-bold text-midnight-ink">
+                                "Hours"
+                            </h3>
+                            <table class="hours-table">
+                                <tbody>
+                                    <tr>
+                                        <td>"Mon – Sat"</td>
+                                        <td>"9:30 AM – 7:30 PM"</td>
+                                    </tr>
+                                    <tr>
+                                        <td>"Sunday"</td>
+                                        <td>"11:00 AM – 6:00 PM"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p class="font-sans text-xs text-midnight-ink/50">
+                                "Walk-ins welcome. "
+                                "We’re often open on holidays — call to check."
+                            </p>
+                        </Card>
+
+                        <Card tint="mint" class="flex flex-col gap-3">
+                            <h3 class="font-display text-base font-bold text-midnight-ink">
+                                "What happens next?"
+                            </h3>
+                            <ol class="flex flex-col gap-2 font-sans text-sm text-midnight-ink/70 list-none">
+                                <li class="flex gap-2">
+                                    <span class="font-bold text-midnight-ink shrink-0">
+                                        "1. "
+                                    </span>
+                                    "We receive your request and check availability."
+                                </li>
+                                <li class="flex gap-2">
+                                    <span class="font-bold text-midnight-ink shrink-0">
+                                        "2. "
+                                    </span>
+                                    "You’ll get an email confirming or a call suggesting a new time."
+                                </li>
+                                <li class="flex gap-2">
+                                    <span class="font-bold text-midnight-ink shrink-0">
+                                        "3. "
+                                    </span>
+                                    "Show up and enjoy your appointment!"
+                                </li>
+                            </ol>
+                        </Card>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <SwatchStrip />
+
         </ErrorBoundary>
     }
 }
