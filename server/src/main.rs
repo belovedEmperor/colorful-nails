@@ -84,8 +84,10 @@ async fn main() {
         resend_api_key,
     };
 
+    let site_root = leptos_options.site_root.clone();
+
     let app = Router::new()
-        .nest_service("/pkg", ServeDir::new("pkg"))
+        .nest_service("/pkg", ServeDir::new(format!("{site_root}/pkg")))
         .route("/telegram/webhook", axum::routing::post(telegram_webhook))
         .leptos_routes_with_context(
             &state,
