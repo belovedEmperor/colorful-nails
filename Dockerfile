@@ -1,4 +1,4 @@
-FROM rust:stable-alpine as builder
+FROM rust:alpine AS builder
 
 RUN apk update && \
    apk add --no-cache bash curl npm libc-dev binaryen pkgconf openssl-dev
@@ -16,7 +16,7 @@ ENV LEPTOS_TAILWIND_VERSION=v3.4.17
 
 RUN cargo leptos build --release -vv
 
-FROM rust:stable-alpine as runner
+FROM rust:alpine AS runner
 
 WORKDIR /app
 
