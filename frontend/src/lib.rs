@@ -1,3 +1,4 @@
+#![recursion_limit = "512"]
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn hydrate() {
     use app::App;

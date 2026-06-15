@@ -1,3 +1,4 @@
+#![recursion_limit = "512"]
 use app::{App, Telegram, shell};
 use axum::{Router, extract::FromRef};
 use leptos::{
