@@ -77,14 +77,14 @@ async fn main() {
     let resend_api_key = std::env::var("RESEND_API_KEY").expect("RESEND_API_KEY");
 
     let state = AppState {
-        leptos_options,
+        leptos_options: leptos_options.clone(),
         db: pool,
         client: reqwest::Client::new(),
         telegram,
         resend_api_key,
     };
 
-    let site_root = leptos_options.site_root.clone();
+    let site_root = std::sync::Arc::<str>::clone(&leptos_options.site_root);
 
     let app = Router::new()
         .nest_service("/pkg", ServeDir::new(format!("{site_root}/pkg")))
