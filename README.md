@@ -15,9 +15,9 @@ An example of the required environment variables are available in `.env.example`
 Go to/fetch `https://api.telegram.org/bot<BOT_TOKEN>/setWebhook?url=<DEPLOYED_URL>//colorful-nails-production.up.railway.app/telegram/webhook`.
 For local testing, `DEPLOYED_URL` can be a tunnel created with a tool such as `cloudflared`.
 
-## Gmail Setup
-1. Create an app password for the email you intend to use.
-2. Add that email and app password to `.env`.
+## Email Setup
+1. Get Resend API key.
+2. Add key to `.env`.
 
 ## Running Locally
 1. Run `docker compose up -d` to run the database.
