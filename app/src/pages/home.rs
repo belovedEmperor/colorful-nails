@@ -23,7 +23,7 @@ pub fn Home() -> impl IntoView {
                             </h1>
                             <p class="text-body text-midnight-ink/70 max-w-sm">
                                 "Family-owned nail salon in Hazleton, PA." <br />
-                                "Open for over 13 years and counting."
+                                "Open for over 16 years."
                             </p>
                             <NavButton
                                 button_class="btn btn-primary btn-lg"
@@ -46,7 +46,7 @@ pub fn Home() -> impl IntoView {
                 <section class="section-padding section-container page-container flex flex-col">
                     <h2 class="section-header">"Who Are We?"</h2>
                     <p>
-                        "We're a family-owned nail salon that's been in Hazleton for more than 13 years!"
+                        "We're a family-owned nail salon that's been in Hazleton for more than 16 years!"
                     </p>
                 </section>
 

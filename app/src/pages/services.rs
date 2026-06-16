@@ -26,8 +26,14 @@ pub const SERVICE_CATEGORIES: &[ServiceCategory] = &[
         bottle: "C084A8",
     },
     ServiceCategory {
-        name: "Nail Extras",
-        services: &["Nail Repair", "Nail Trim", "Nail Design", "Nail Removal"],
+        name: "Extras",
+        services: &[
+            "Nail Repair",
+            "Nail Trim",
+            "Nail Design",
+            "Nail Removal",
+            "Eyelash Extensions",
+        ],
         accent: "gold",
         tint: "champagne",
         bottle: "D4A017",

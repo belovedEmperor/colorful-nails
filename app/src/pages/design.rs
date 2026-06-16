@@ -73,9 +73,7 @@ fn Row(#[prop(optional, into)] label: String, children: Children) -> impl IntoVi
                     {label.clone()}
                 </p>
             </Show>
-            <div class="flex flex-wrap items-center gap-3">
-                {children()}
-            </div>
+            <div class="flex flex-wrap items-center gap-3">{children()}</div>
         </div>
     }
 }
@@ -99,10 +97,7 @@ fn Swatch(
 
     view! {
         <div class="flex flex-col gap-1.5 w-32">
-            <div
-                class=format!("w-32 h-20 rounded-xl {border}")
-                style=bg_style
-            ></div>
+            <div class=format!("w-32 h-20 rounded-xl {border}") style=bg_style></div>
             <div class="flex flex-col gap-0.5">
                 <p class="text-xs font-semibold text-midnight-ink font-sans">{name}</p>
                 <p class="text-xs font-mono text-midnight-ink/50">{hex_label}</p>
@@ -153,14 +148,7 @@ pub fn Design() -> impl IntoView {
                     {PALETTE
                         .iter()
                         .map(|(name, color, token, light)| {
-                            view! {
-                                <Swatch
-                                    name=name
-                                    color=color
-                                    token=token
-                                    light=*light
-                                />
-                            }
+                            view! { <Swatch name=name color=color token=token light=*light /> }
                         })
                         .collect_view()}
                 </div>
@@ -175,12 +163,8 @@ pub fn Design() -> impl IntoView {
                         <p class="font-display font-bold" style="font-size: 3rem; line-height: 1.1">
                             "Colorful Nails & Spa"
                         </p>
-                        <p class="font-display font-bold text-subtitle">
-                            "Book Your Appointment"
-                        </p>
-                        <p class="font-display text-section font-semibold">
-                            "Our Services"
-                        </p>
+                        <p class="font-display font-bold text-subtitle">"Book Your Appointment"</p>
+                        <p class="font-display text-section font-semibold">"Our Services"</p>
                         <p class="font-display text-xl font-medium italic text-midnight-ink/70">
                             "Every shade tells a story."
                         </p>
@@ -189,7 +173,7 @@ pub fn Design() -> impl IntoView {
                 <Row label="Body — Inter">
                     <div class="flex flex-col gap-2 w-full font-sans">
                         <p class="text-base font-normal text-midnight-ink">
-                            "Regular 16 — We've been in Hazleton for over 13 years. Family-owned, locally loved."
+                            "Regular 16 — We've been in Hazleton for over 16 years. Family-owned, locally loved."
                         </p>
                         <p class="text-sm font-medium text-midnight-ink">
                             "Medium 14 — Open Monday through Saturday 9:30 AM – 7:30 PM, Sunday 11 AM – 6 PM."
@@ -256,8 +240,12 @@ pub fn Design() -> impl IntoView {
                 </Row>
                 <Row label="Disabled">
                     <Button disabled=true>"Primary"</Button>
-                    <Button variant="secondary" disabled=true>"Secondary"</Button>
-                    <Button variant="ghost" disabled=true>"Ghost"</Button>
+                    <Button variant="secondary" disabled=true>
+                        "Secondary"
+                    </Button>
+                    <Button variant="ghost" disabled=true>
+                        "Ghost"
+                    </Button>
                 </Row>
             </Section>
 
@@ -277,15 +265,23 @@ pub fn Design() -> impl IntoView {
                 <Row label="In context">
                     <div class="card flex items-center justify-between gap-4 w-full max-w-sm">
                         <div>
-                            <p class="font-sans font-semibold text-sm text-midnight-ink">"Full Set Acrylic"</p>
-                            <p class="font-sans text-xs text-midnight-ink/50 tabular-nums">"Friday · 2:00 PM"</p>
+                            <p class="font-sans font-semibold text-sm text-midnight-ink">
+                                "Full Set Acrylic"
+                            </p>
+                            <p class="font-sans text-xs text-midnight-ink/50 tabular-nums">
+                                "Friday · 2:00 PM"
+                            </p>
                         </div>
                         <Badge variant="coral">"Confirmed"</Badge>
                     </div>
                     <div class="card flex items-center justify-between gap-4 w-full max-w-sm">
                         <div>
-                            <p class="font-sans font-semibold text-sm text-midnight-ink">"Pedicure"</p>
-                            <p class="font-sans text-xs text-midnight-ink/50 tabular-nums">"Saturday · 11:00 AM"</p>
+                            <p class="font-sans font-semibold text-sm text-midnight-ink">
+                                "Pedicure"
+                            </p>
+                            <p class="font-sans text-xs text-midnight-ink/50 tabular-nums">
+                                "Saturday · 11:00 AM"
+                            </p>
                         </div>
                         <Badge variant="gold">"Pending"</Badge>
                     </div>
@@ -302,7 +298,9 @@ pub fn Design() -> impl IntoView {
                 </p>
                 <Row label="Tint variants">
                     <Card class="w-40 h-24 flex items-center justify-center">
-                        <span class="font-sans text-xs text-midnight-ink/50">"Default (white)"</span>
+                        <span class="font-sans text-xs text-midnight-ink/50">
+                            "Default (white)"
+                        </span>
                     </Card>
                     <Card tint="blush" class="w-40 h-24 flex items-center justify-center">
                         <span class="font-sans text-xs text-midnight-ink/50">"Blush"</span>
@@ -329,8 +327,12 @@ pub fn Design() -> impl IntoView {
                             "Long-lasting gel color applied over natural nails. Includes shape and cuticle care."
                         </p>
                         <div class="flex items-center justify-between mt-1">
-                            <span class="font-sans font-bold text-midnight-ink tabular-nums">"$45"</span>
-                            <Button size="sm" variant="secondary">"Book"</Button>
+                            <span class="font-sans font-bold text-midnight-ink tabular-nums">
+                                "$45"
+                            </span>
+                            <Button size="sm" variant="secondary">
+                                "Book"
+                            </Button>
                         </div>
                     </Card>
                     <Card tint="blush" class="flex flex-col gap-3 max-w-xs w-full">
@@ -344,7 +346,9 @@ pub fn Design() -> impl IntoView {
                             "Shape, buff, cuticle care, and your choice of regular polish."
                         </p>
                         <div class="flex items-center justify-between mt-1">
-                            <span class="font-sans font-bold text-midnight-ink tabular-nums">"$25"</span>
+                            <span class="font-sans font-bold text-midnight-ink tabular-nums">
+                                "$25"
+                            </span>
                             <Button size="sm">"Book"</Button>
                         </div>
                     </Card>
@@ -361,7 +365,9 @@ pub fn Design() -> impl IntoView {
                     </Alert>
                     <Alert variant="error" title="Something went wrong">
                         "We couldn't save your appointment. Try again or call "
-                        <a class="link" href="tel:+15704552799">"(570) 455-2799"</a>
+                        <a class="link" href="tel:+15704552799">
+                            "(570) 455-2799"
+                        </a>
                         "."
                     </Alert>
                     <Alert variant="warning" title="Almost full">
@@ -370,9 +376,7 @@ pub fn Design() -> impl IntoView {
                     <Alert variant="info" title="Holiday hours">
                         "We're open Christmas Eve 10 AM – 4 PM. Closed Christmas Day."
                     </Alert>
-                    <Alert variant="success">
-                        "No title — just a short success message."
-                    </Alert>
+                    <Alert variant="success">"No title — just a short success message."</Alert>
                 </div>
             </Section>
 
@@ -433,10 +437,8 @@ pub fn Design() -> impl IntoView {
                             id="toggle-b"
                         />
                         <p class="font-sans text-xs text-midnight-ink/50">
-                            "Text reminders: "
-                            {move || if toggle_a.get() { "on" } else { "off" }}
-                            " · Email: "
-                            {move || if toggle_b.get() { "on" } else { "off" }}
+                            "Text reminders: " {move || if toggle_a.get() { "on" } else { "off" }}
+                            " · Email: " {move || if toggle_b.get() { "on" } else { "off" }}
                         </p>
                     </div>
                 </Row>
