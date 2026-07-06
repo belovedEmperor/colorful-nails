@@ -1,5 +1,5 @@
 # Colorful Nails & Spa
-Website mainly for customers to make online appointments with.
+Nail salon website that displays past works, lists available services, and allows customers to make appointments. 
 
 ## Environment Variables
 An example of the required environment variables are available in `.env.example`.
